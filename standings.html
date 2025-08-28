@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Standings · Euro2KLeague</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body id="page-standings">
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html">
+        <img src="assets/logo.png" alt="Euro2KLeague logo" class="logo">
+        <span class="brand-text">Euro2KLeague</span>
+      </a>
+      <nav class="nav">
+        <a href="index.html" class="nav-link">League</a>
+        <a href="teams.html" class="nav-link">Teams</a>
+        <a href="schedule.html" class="nav-link">Schedule</a>
+        <a href="standings.html" class="nav-link">Standings</a>
+      </nav>
+      <button class="nav-toggle" aria-label="Open Menu">☰</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="page-title">Standings</h1>
+        <p class="dek">Live table updated as results come in.</p>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card table-card">
+        <div class="table responsive" id="standings-table">
+          <!-- rows injected by JS -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="foot-brand">
+        <img src="assets/logo.png" class="logo small" alt="Euro2KLeague">
+        <div>© <span id="year"></span> Euro2KLeague — All rights reserved.</div>
+      </div>
+      <div class="foot-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
