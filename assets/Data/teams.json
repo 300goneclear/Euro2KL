@@ -1,0 +1,102 @@
+[
+  {
+    "code": "LON",
+    "name": "London Lions",
+    "city": "London",
+    "coach": "A. Bennett",
+    "colors": [
+      "#0b0b18",
+      "#7a3cff"
+    ]
+  },
+  {
+    "code": "PAR",
+    "name": "Paris Phantoms",
+    "city": "Paris",
+    "coach": "R. Duval",
+    "colors": [
+      "#0b0b18",
+      "#e91e63"
+    ]
+  },
+  {
+    "code": "BER",
+    "name": "Berlin Titans",
+    "city": "Berlin",
+    "coach": "K. M\u00f6ller",
+    "colors": [
+      "#0b0b18",
+      "#00eaff"
+    ]
+  },
+  {
+    "code": "MAD",
+    "name": "Madrid Royals",
+    "city": "Madrid",
+    "coach": "C. Alvarez",
+    "colors": [
+      "#0b0b18",
+      "#ffc107"
+    ]
+  },
+  {
+    "code": "ROM",
+    "name": "Rome Reapers",
+    "city": "Rome",
+    "coach": "M. Romano",
+    "colors": [
+      "#0b0b18",
+      "#ff7043"
+    ]
+  },
+  {
+    "code": "AMS",
+    "name": "Amsterdam Apex",
+    "city": "Amsterdam",
+    "coach": "B. Jansen",
+    "colors": [
+      "#0b0b18",
+      "#26a69a"
+    ]
+  },
+  {
+    "code": "STO",
+    "name": "Stockholm Frost",
+    "city": "Stockholm",
+    "coach": "L. Berg",
+    "colors": [
+      "#0b0b18",
+      "#42a5f5"
+    ]
+  },
+  {
+    "code": "WAR",
+    "name": "Warsaw Vanguards",
+    "city": "Warsaw",
+    "coach": "P. Nowak",
+    "colors": [
+      "#0b0b18",
+      "#ef5350"
+    ]
+  },
+  {
+    "code": "LIS",
+    "name": "Lisbon Lynx",
+    "city": "Lisbon",
+    "coach": "T. Sousa",
+    "colors": [
+      "#0b0b18",
+      "#ab47bc"
+    ]
+  },
+  {
+    "code": "PRG",
+    "name": "Prague Pulse",
+    "city": "Prague",
+    "coach": "J. Novak",
+    "colors": [
+      "#0b0b18",
+      "#66bb6a"
+    ]
+  }
+]

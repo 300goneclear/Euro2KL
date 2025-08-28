@@ -1,0 +1,72 @@
+[
+  {
+    "code": "LON",
+    "wins": 3,
+    "losses": 1,
+    "pf": 356,
+    "pa": 320
+  },
+  {
+    "code": "PAR",
+    "wins": 3,
+    "losses": 1,
+    "pf": 349,
+    "pa": 330
+  },
+  {
+    "code": "BER",
+    "wins": 2,
+    "losses": 2,
+    "pf": 331,
+    "pa": 334
+  },
+  {
+    "code": "MAD",
+    "wins": 2,
+    "losses": 2,
+    "pf": 328,
+    "pa": 330
+  },
+  {
+    "code": "ROM",
+    "wins": 2,
+    "losses": 2,
+    "pf": 340,
+    "pa": 345
+  },
+  {
+    "code": "AMS",
+    "wins": 2,
+    "losses": 2,
+    "pf": 336,
+    "pa": 338
+  },
+  {
+    "code": "STO",
+    "wins": 1,
+    "losses": 3,
+    "pf": 315,
+    "pa": 342
+  },
+  {
+    "code": "WAR",
+    "wins": 1,
+    "losses": 3,
+    "pf": 300,
+    "pa": 336
+  },
+  {
+    "code": "LIS",
+    "wins": 1,
+    "losses": 3,
+    "pf": 310,
+    "pa": 350
+  },
+  {
+    "code": "PRG",
+    "wins": 1,
+    "losses": 3,
+    "pf": 298,
+    "pa": 355
+  }
+]

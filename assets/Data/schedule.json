@@ -1,0 +1,167 @@
+[
+  {
+    "week": 1,
+    "date": "2025-08-28",
+    "time": "19:00",
+    "home": "LON",
+    "away": "PAR",
+    "venue": "Online",
+    "status": "Scheduled",
+    "home_score": null,
+    "away_score": null
+  },
+  {
+    "week": 1,
+    "date": "2025-08-29",
+    "time": "19:00",
+    "home": "BER",
+    "away": "MAD",
+    "venue": "Online",
+    "status": "Scheduled",
+    "home_score": null,
+    "away_score": null
+  },
+  {
+    "week": 1,
+    "date": "2025-08-30",
+    "time": "19:00",
+    "home": "ROM",
+    "away": "AMS",
+    "venue": "Online",
+    "status": "Scheduled",
+    "home_score": null,
+    "away_score": null
+  },
+  {
+    "week": 1,
+    "date": "2025-08-31",
+    "time": "19:00",
+    "home": "STO",
+    "away": "WAR",
+    "venue": "Online",
+    "status": "Scheduled",
+    "home_score": null,
+    "away_score": null
+  },
+  {
+    "week": 1,
+    "date": "2025-09-01",
+    "time": "19:00",
+    "home": "LIS",
+    "away": "PRG",
+    "venue": "Online",
+    "status": "Scheduled",
+    "home_score": null,
+    "away_score": null
+  },
+  {
+    "week": 2,
+    "date": "2025-09-04",
+    "time": "19:00",
+    "home": "LON",
+    "away": "BER",
+    "venue": "Online",
+    "status": "Scheduled",
+    "home_score": null,
+    "away_score": null
+  },
+  {
+    "week": 2,
+    "date": "2025-09-05",
+    "time": "19:00",
+    "home": "PAR",
+    "away": "MAD",
+    "venue": "Online",
+    "status": "Scheduled",
+    "home_score": null,
+    "away_score": null
+  },
+  {
+    "week": 2,
+    "date": "2025-09-06",
+    "time": "19:00",
+    "home": "ROM",
+    "away": "STO",
+    "venue": "Online",
+    "status": "Scheduled",
+    "home_score": null,
+    "away_score": null
+  },
+  {
+    "week": 2,
+    "date": "2025-09-07",
+    "time": "19:00",
+    "home": "AMS",
+    "away": "WAR",
+    "venue": "Online",
+    "status": "Scheduled",
+    "home_score": null,
+    "away_score": null
+  },
+  {
+    "week": 2,
+    "date": "2025-09-08",
+    "time": "19:00",
+    "home": "LIS",
+    "away": "PRG",
+    "venue": "Online",
+    "status": "Scheduled",
+    "home_score": null,
+    "away_score": null
+  },
+  {
+    "week": 3,
+    "date": "2025-09-11",
+    "time": "19:00",
+    "home": "MAD",
+    "away": "LON",
+    "venue": "Online",
+    "status": "Scheduled",
+    "home_score": null,
+    "away_score": null
+  },
+  {
+    "week": 3,
+    "date": "2025-09-12",
+    "time": "19:00",
+    "home": "PAR",
+    "away": "BER",
+    "venue": "Online",
+    "status": "Scheduled",
+    "home_score": null,
+    "away_score": null
+  },
+  {
+    "week": 3,
+    "date": "2025-09-13",
+    "time": "19:00",
+    "home": "AMS",
+    "away": "ROM",
+    "venue": "Online",
+    "status": "Scheduled",
+    "home_score": null,
+    "away_score": null
+  },
+  {
+    "week": 3,
+    "date": "2025-09-14",
+    "time": "19:00",
+    "home": "WAR",
+    "away": "STO",
+    "venue": "Online",
+    "status": "Scheduled",
+    "home_score": null,
+    "away_score": null
+  },
+  {
+    "week": 3,
+    "date": "2025-09-15",
+    "time": "19:00",
+    "home": "PRG",
+    "away": "LIS",
+    "venue": "Online",
+    "status": "Scheduled",
+    "home_score": null,
+    "away_score": null
+  }
+]
