@@ -1,50 +1,16 @@
 [
   {
-    "team_id": "FEN",
+    "team": "Fenerbache",
     "wins": 1,
     "losses": 0,
-    "pct": 1.0,
-    "pf": 72,
+    "pf": 75,
     "pa": 68
   },
   {
-    "team_id": "PAR",
-    "wins": 1,
-    "losses": 0,
-    "pct": 1.0,
-    "pf": 71,
-    "pa": 65
-  },
-  {
-    "team_id": "GIR",
-    "wins": 1,
-    "losses": 0,
-    "pct": 1.0,
-    "pf": 77,
-    "pa": 75
-  },
-  {
-    "team_id": "ASU",
+    "team": "Asura",
     "wins": 0,
     "losses": 1,
-    "pct": 0.0,
     "pf": 68,
-    "pa": 72
-  },
-  {
-    "team_id": "VIT",
-    "wins": 0,
-    "losses": 1,
-    "pct": 0.0,
-    "pf": 65,
-    "pa": 71
-  },
-  {
-    "team_id": "ZES",
-    "wins": 0,
-    "losses": 1,
-    "pct": 0.0,
-    "pf": 75,
-    "pa": 77
+    "pa": 75
   }
 ]
