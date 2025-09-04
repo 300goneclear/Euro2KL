@@ -26,8 +26,7 @@
     </div>
     <nav>
       <a href="index.html">Home</a>
-      <a href="boxscore-import.html">Boxscore Import</a>
-      <a href="stats-players.html">Player Stats</a>
+<a href="stats-players.html">Player Stats</a>
       <a href="stats-teams.html">Team Stats</a>
       <a href="leaders-players.html">Leaders — Players</a>
       <a href="leaders-teams.html">Leaders — Teams</a>
