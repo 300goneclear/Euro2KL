@@ -1,35 +1,21 @@
-
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Euro2KLeague — Team Stats Leaders</title>
-  <link rel="stylesheet" href="stats.css">
-</head>
-<body>
-  <div class="wrapper">
-    <div class="header">
-      <div class="logo">E2K</div>
-      <h1>Stats</h1>
-      <div class="subnav">
-        <a href="players.html">Player Leaders</a>
-        <a class="active" href="teams.html">Team Leaders</a>
-      </div>
-    </div>
-
-    <div class="section-title">
-      <h2>Playoffs Leaders</h2>
-      <span class="badge">BETA</span>
-    </div>
-
-    <div class="grid">
-      <div class="leaders" id="team-leaders"></div>
-      <aside class="sidebar" id="sidebar-right"></aside>
-    </div>
-
-    <footer>Euro2KLeague — stats layout pack • Generated 2025-09-04</footer>
-  </div>
-  <script src="stats.js"></script>
-</body>
-</html>
+<!doctype html><html lang='en'><head>
+<meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Teams · Euro2KLeague</title>
+<link rel="stylesheet" href="styles.css">
+</head><body>
+<header class="site-header"><div class="container nav-wrap">
+  <a class="brand" href="index.html"><img src="assets/logo.png" class="logo" alt=""><span class="brand-text">Euro2KLeague</span></a>
+  <nav class="nav"><a href="standings.html">Standings</a><a href="stats-players.html">Stats</a><a href="leaders-players.html">Leaders</a></nav>
+</div></header>
+<main class="container"><h1 style="margin:18px 0">Teams</h1>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px">
+  <a class="card" href="team-fenerbache.html" style="text-decoration:none;color:var(--ink)">
+    <div style="height:90px;background:linear-gradient(90deg,#041E42,#FEDD00)"></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:12px"><img src="assets/teams/fenerbache.svg" style="height:56px;background:#fff;border-radius:12px;padding:8px;border:1px solid var(--border)"><h3>Fenerbache</h3></div>
+  </a>
+  <a class="card" href="team-asura.html" style="text-decoration:none;color:var(--ink)">
+    <div style="height:90px;background:linear-gradient(90deg,#0C49FF,#FFB000)"></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:12px"><img src="assets/teams/asura.svg" style="height:56px;background:#fff;border-radius:12px;padding:8px;border:1px solid var(--border)"><h3>Asura</h3></div>
+  </a>
+</div></main>
+<script src="script.js"></script></body></html>
