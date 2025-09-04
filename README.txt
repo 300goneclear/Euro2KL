@@ -1,13 +1,17 @@
 
-This build reads today's box score from **games.json** (in /Euro2KL/assets/data). 
-- It picks the newest game by date fields (date/gameDate/start_time/timestamp), preferring status Final/Completed. 
-- It then extracts players from any of these locations: `players`, `activePlayers`, `home.players`, `away.players`, `boxscore`, `stats`, or `statlines`.
+Place **boxscore.json** at: /Euro2KL/assets/data/boxscore.json
 
-Accepted stat keys inside each player (any casing works):
-  points/pts/PTS, rebounds/reb/totReb/REB, assists/ast/AST, steals/stl/STL, blocks/blk/BLK, 
-  (fgm,fga) or fg_pct, (3pm/tpm,3pa/tpa) or tp_pct, (ftm,fta) or ft_pct.
-Accepted name keys: first_name+last_name, firstName+lastName, name, playerName, fullName, id.
+Fields supported (and used by the pages):
+- game.date, game.status
+- game.home / game.away: { id, name, score, quarters: [Q1,Q2,Q3,Q4], totals:{reb,ast,stl,blk}, players:[
+    { gamertag (or name), pts, reb, ast, stl, blk, fgm, fga, tpm, tpa, ftm (opt), fta (opt), to (opt), fouls (opt) }
+  ] }
 
-Fallback: below the game leaders it will render season leaders from players.json (if present).
+Team page:
+- Uses team_stats.json if present. Otherwise derives per-team PPG, RPG, APG, STL, BLK across **all games** in games.json.
+- If games.json is missing, it will at least use scores from boxscore.json to compute PPG for the two teams.
 
-If your schema is different, send me a small snippet of games.json and I’ll tune the mapper.
+Player page:
+- Shows a scoreboard with Q1-Q4 combined (HOME : AWAY) and renders Game Leaders from the box score.
+
+If your schema differs, adjust field names in **boxscore.json** — the parser is flexible.
