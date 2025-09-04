@@ -61,3 +61,22 @@
   .hero-art{ background-position: top center !important; background-size: min(56vh, 640px) !important; }
   .hero-copy{ padding-top: clamp(200px, 45vh, 360px) !important; }
 }
+
+
+/* === Side Menu (top-left) === */
+.menu-btn{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;
+  border:1px solid var(--border);background:rgba(0,0,0,.35);color:var(--ink);}
+.menu-btn:active{transform:translateY(1px)}
+.nav-wrap .menu-btn{margin-right:6px}
+
+.side-menu{position:fixed;inset:0 auto 0 0;width:min(86vw,360px);background:#000;transform:translateX(-100%);
+  transition:transform .28s ease;z-index:2000;color:#fff;border-right:1px solid rgba(255,255,255,.08)}
+.side-menu.open{transform:none}
+.side-menu .top{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.side-menu .logo{height:28px}
+.side-menu .close{background:none;border:1px solid rgba(255,255,255,.2);border-radius:8px;color:#fff;width:32px;height:32px}
+.side-menu nav{display:flex;flex-direction:column;padding:10px}
+.side-menu a{color:#fff;text-decoration:none;padding:14px 10px;border-radius:10px;font-weight:800;letter-spacing:.3px}
+.side-menu a:hover{background:rgba(255,255,255,.08)}
+.menu-mask{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(1px);z-index:1500;display:none}
+.menu-mask.show{display:block}
