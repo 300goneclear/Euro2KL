@@ -1,5 +1,5 @@
 
-/* Euro2KLeague Stats Lookalike (with scoreboard + quarters) */
+/* Euro2KLeague Stats Lookalike (no scoreboard) */
 :root{ --bg:#0b0d12; --panel:#11151c; --panel-2:#161b22; --text:#e7ecf3; --muted:#a6b3c2; --accent:#ffd166; --divider:#202734; }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif}
@@ -26,13 +26,4 @@ a{color:#69a7ff;text-decoration:none} a:hover{text-decoration:underline}
 .empty{grid-column:1/-1;border:1px dashed var(--divider);border-radius:10px;padding:14px;background:var(--panel-2);color:var(--muted)}
 .kicker{margin:6px 0 0 0;color:var(--muted);font-size:12px}
 footer{margin:24px 0 8px 0;color:var(--muted);font-size:12px;text-align:center}
-.sep{height:1px;background:var(--divider);margin:16px 0}
-/* Scoreboard */
-.scoreboard{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;background:var(--panel);border:1px solid var(--divider);border-radius:12px;padding:12px}
-.team{display:flex;gap:12px;align-items:center}
-.team .name{font-weight:700}
-.bigscore{font-size:36px;font-weight:800;letter-spacing:1px}
-.quarters{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.quarters .q{background:var(--panel-2);border:1px solid var(--divider);border-radius:8px;padding:8px;text-align:center}
-.quarters .q .label{display:block;color:var(--muted);font-size:11px;margin-bottom:4px}
-@media (max-width:980px){ .grid{grid-template-columns:1fr;gap:12px} .leaders{grid-template-columns:1fr} .scoreboard{grid-template-columns:1fr} .team{justify-content:space-between} }
+@media (max-width:980px){ .grid{grid-template-columns:1fr;gap:12px} .leaders{grid-template-columns:1fr} .subnav{flex-wrap:wrap} }

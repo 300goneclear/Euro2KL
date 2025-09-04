@@ -1,5 +1,5 @@
 
-// Primary data location for your site
+// Data paths (project first)
 const DATA_BASES = ['/Euro2KL/assets/data','assets/data','/assets/data'];
 const QS = new URLSearchParams(location.search);
 const BOX_FILE = QS.get('box') || 'boxscore.json';
@@ -10,80 +10,30 @@ const TEAM_STATS_FILE = QS.get('teamstats') || 'team_stats.json';
 async function tryFetchJSON(bases,file){
   const errs=[];
   for(const base of bases){
-    const url=`${base.replace(/\/$/,'')}/${file.replace(/^\//,'')}`;
-    try{ const r=await fetch(url,{cache:'no-store'}); if(r.ok) return r.json(); errs.push(`${url} → ${r.status}`);}catch(e){ errs.push(`${url} → ${e.message}`); }
+    const url = `${base.replace(/\/$/,'')}/${file.replace(/^\//,'')}`;
+    try{ const r = await fetch(url,{cache:'no-store'}); if(r.ok) return r.json(); errs.push(`${url} → ${r.status}`); }
+    catch(e){ errs.push(`${url} → ${e.message}`); }
   }
   const error = new Error('All paths failed for '+file); error._e2kErrors=errs; throw error;
 }
 
 const by=k=>(a,b)=>(b[k]??0)-(a[k]??0);
-const round=(x,d=1)=>Number.parseFloat(x??0).toFixed(d);
-const pctFmt=v=>round(100*(v||0),1)+'%';
-const nameFrom=p=> (p.first_name&&p.last_name)?`${p.first_name} ${p.last_name}`:
-                    (p.firstName&&p.lastName)?`${p.firstName} ${p.lastName}`:
-                    p.name||p.playerName||p.fullName||p.gamertag||p.id||'—';
+const round=(x,d=1)=> Number.parseFloat(x ?? 0).toFixed(d);
+const pctFmt=v=> round(100*(v||0),1) + '%';
+const nameFrom=p=> (p.first_name&&p.last_name)?`${p.first_name} ${p.last_name}` :
+                    (p.firstName&&p.lastName)?`${p.firstName} ${p.lastName}` :
+                    p.name || p.playerName || p.fullName || p.gamertag || p.id || '—';
 
-function renderLeaders(el,title,rows){
-  const card=document.createElement('div'); card.className='card';
-  card.innerHTML=`<h3>${title}</h3><table class="table"><tbody></tbody></table>`;
-  const tb=card.querySelector('tbody');
-  rows.forEach((r,i)=>{ const tr=document.createElement('tr');
-    tr.innerHTML=`<td class="rank">${i+1}.</td><td>${r.name}</td><td style="text-align:right;font-variant-numeric:tabular-nums">${r.val}</td>`;
-    tb.appendChild(tr);
-  });
-  el.appendChild(card);
-}
-function showEmpty(where,msg,details){ const div=document.createElement('div'); div.className='empty'; div.innerHTML=`<strong>${msg}</strong>${details?`<div class="kicker">${details}</div>`:''}`; where.appendChild(div); }
-
-// --- Scoreboard helpers ---
-function val(v){ return Array.isArray(v)?v: (v!=null?v:0); }
-function teamName(t){ return t?.name || t?.team || t?.abbr || t?.id || 'Team'; }
-function getQuarters(t){
-  // supports [q1,q2,q3,q4] under quarters or q1..q4 fields
-  if(Array.isArray(t?.quarters)) return t.quarters;
-  const q = [t?.q1, t?.q2, t?.q3, t?.q4].map(x=> Number(x||0));
-  if(q.some(x=>x)) return q;
-  return null;
-}
-function renderScoreboard(container, game){
-  const home = game.home || game.host || game.team1 || game.alpha || {};
-  const away = game.away || game.visitor || game.team2 || game.beta || {};
-  const hq = getQuarters(home) || [null,null,null,null];
-  const aq = getQuarters(away) || [null,null,null,null];
-  const div = document.createElement('div'); div.className='scoreboard';
-  div.innerHTML = `
-    <div class="team left">
-      <div class="name">${teamName(home)}</div>
-      <div class="bigscore">${home.score ?? home.points ?? 0}</div>
-    </div>
-    <div class="quarters">
-      ${['Q1','Q2','Q3','Q4'].map((lbl,i)=>`<div class="q"><span class="label">${lbl}</span><div>${hq[i]??'-'} : ${aq[i]??'-'}</div></div>`).join('')}
-    </div>
-    <div class="team right" style="justify-content:flex-end">
-      <div class="bigscore">${away.score ?? away.points ?? 0}</div>
-      <div class="name">${teamName(away)}</div>
-    </div>`;
-  container.appendChild(div);
-}
-
-// --- Player extraction (generic) ---
+// --- generic player array finder ---
 const STAT_KEYS = {
-  pts:['pts','points','PTS'],
-  reb:['reb','rebounds','totReb','REB'],
-  ast:['ast','assists','AST'],
-  stl:['stl','steals','STL'],
-  blk:['blk','blocks','BLK'],
-  fgm:['fgm','fieldGoalsMade','FGM'],
-  fga:['fga','fieldGoalsAttempted','FGA'],
-  tpm:['tpm','threePM','3pm','3PM'],
-  tpa:['tpa','threePA','3pa','3PA'],
-  ftm:['ftm','freeThrowsMade','FTM'],
-  fta:['fta','freeThrowsAttempted','FTA'],
-  fg_pct:['fg_pct','fgPct'],
-  tp_pct:['tp_pct','tpPct','threePPct','3pPct'],
-  ft_pct:['ft_pct','ftPct']
+  pts:['pts','points','PTS'], reb:['reb','rebounds','totReb','REB'], ast:['ast','assists','AST'],
+  stl:['stl','steals','STL'], blk:['blk','blocks','BLK'],
+  fgm:['fgm','fieldGoalsMade','FGM'], fga:['fga','fieldGoalsAttempted','FGA'],
+  tpm:['tpm','threePM','3pm','3PM'], tpa:['tpa','threePA','3pa','3PA'],
+  ftm:['ftm','freeThrowsMade','FTM'], fta:['fta','freeThrowsAttempted','FTA'],
+  fg_pct:['fg_pct','fgPct'], tp_pct:['tp_pct','tpPct','threePPct','3pPct'], ft_pct:['ft_pct','ftPct']
 };
-function readField(obj, list){ for(const k of list){ if(obj[k]!=null) return obj[k]; } return null; }
+function readField(o,keys){ for(const k of keys){ if(o[k]!=null) return o[k]; } return null; }
 function isPlayerish(o){ if(typeof o!=='object'||Array.isArray(o)) return false; return Object.values(STAT_KEYS).flat().some(k=> o[k]!=null); }
 function findPlayerArrays(root){
   const res=[]; (function walk(v,path){
@@ -96,11 +46,12 @@ function findPlayerArrays(root){
   })(root,'');
   return res;
 }
-function extractPlayersGeneric(game){
+function extractPlayersWithTeam(game){
   const arrays = findPlayerArrays(game);
-  let players = [];
+  const players = [];
   arrays.forEach(({path,arr})=>{
-    const teamHint = /home|host|team1|alpha/i.test(path) ? 'HOME' : /away|visitor|team2|beta/i.test(path) ? 'AWAY' : null;
+    const teamHint = /home|host|team1|alpha/i.test(path) ? 'HOME' :
+                     /away|visitor|team2|beta/i.test(path) ? 'AWAY' : null;
     arr.forEach(p=>{
       const pts = readField(p, STAT_KEYS.pts) ?? 0;
       const reb = readField(p, STAT_KEYS.reb) ?? 0;
@@ -127,36 +78,46 @@ function extractPlayersGeneric(game){
   });
   return players;
 }
+
 function parseGameTime(g){
   const d = g.date || g.gameDate || g.start_time || g.startTime || g.timestamp || g.ts;
-  const t = Date.parse(d || 0);
-  return Number.isNaN(t) ? 0 : t;
+  const t = Date.parse(d || 0); return Number.isNaN(t) ? 0 : t;
 }
 
-async function loadBoxOrGames(){
+async function loadGamePreferBox(){
   try{
     const box = await tryFetchJSON(DATA_BASES, BOX_FILE);
-    const game = box.game || box; // either {game:{...}} or the game object directly
-    return {gameFrom:'box', game};
-  }catch(e){ /* fall back */ }
+    const game = box.game || box;
+    return {source:'box', game};
+  }catch(e){ /* fall through */ }
   const raw = await tryFetchJSON(DATA_BASES, GAMES_FILE);
   const games = Array.isArray(raw) ? raw : (raw.games || raw.schedule || raw.data || []);
   if(!games.length) throw new Error('No games found.');
   const sorted=[...games].sort((a,b)=> parseGameTime(b)-parseGameTime(a));
-  let game= sorted.find(g=> /final|complete|completed|ended/i.test(String(g.status||''))) || sorted[0];
-  return {gameFrom:'games', game};
+  const game = sorted.find(g=> /final|complete|completed|ended/i.test(String(g.status||''))) || sorted[0];
+  return {source:'games', game};
 }
 
-// --- Page builders ---
+// ---- PAGE BUILDERS ----
+function renderLeaders(container, title, rows){
+  const card=document.createElement('div'); card.className='card';
+  card.innerHTML=`<h3>${title}</h3><table class="table"><tbody></tbody></table>`;
+  const tbody=card.querySelector('tbody');
+  rows.forEach((r,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="rank">${i+1}.</td><td>${r.name}</td><td style="text-align:right;font-variant-numeric:tabular-nums">${r.val}</td>`;
+    tbody.appendChild(tr);
+  });
+  container.appendChild(card);
+}
+function showEmpty(where,msg,details){ const div=document.createElement('div'); div.className='empty'; div.innerHTML=`<strong>${msg}</strong>${details?`<div class="kicker">${details}</div>`:''}`; where.appendChild(div); }
+
 async function buildPlayerLeaders(){
   const host=document.querySelector('#player-leaders');
   try{
-    const {gameFrom, game} = await loadBoxOrGames();
-    // scoreboard
-    renderScoreboard(document.querySelector('#scoreboard'), game);
-    // players
-    const players = extractPlayersGeneric(game);
-    if(!players.length){ showEmpty(host, 'Game loaded but no player lines found.', 'Add players under home.players / away.players or include stat arrays.'); return; }
+    const {game} = await loadGamePreferBox();
+    const players = extractPlayersWithTeam(game);
+    if(!players.length){ showEmpty(host,'Game loaded but no player lines found.','Add players under home.players / away.players.'); return; }
     const cats=[
       ['POINTS','pts',0],['REBOUNDS','reb',0],['ASSISTS','ast',0],['STEALS','stl',0],['BLOCKS','blk',0],
       ['FIELD GOAL %','fg_pct',1,pctFmt],['3-PT MADE','tpm',0],['3-PT %','tp_pct',1,pctFmt],['FREE THROW %','ft_pct',1,pctFmt]
@@ -172,10 +133,10 @@ async function buildPlayerLeaders(){
 
 async function buildTeamLeaders(){
   const wrap=document.querySelector('#team-leaders');
-  // Use team_stats.json if provided
+  // 1) Use team_stats.json if provided
   try{
     const tstats = await tryFetchJSON(DATA_BASES, TEAM_STATS_FILE);
-    if(Array.isArray(tstats)&&tstats.length){
+    if(Array.isArray(tstats) && tstats.length){
       const cats=[['POINTS PER GAME','ppg',1],['REBOUNDS PER GAME','rpg',1],['ASSISTS PER GAME','apg',1],['STEALS PER GAME','spg',1],['BLOCKS PER GAME','bpg',1]];
       for(const [label,key,d] of cats){
         const top=[...tstats].sort(by(key)).slice(0,5).map(t=>({name:t.name||t.team||t.team_id||t.id||t.abbr, val: round(t[key],d)}));
@@ -185,32 +146,61 @@ async function buildTeamLeaders(){
     }
   }catch(e){ /* fall through */ }
 
-  // Derive from all games: use team totals when available, else sum players, else at least use team scores for PPG
+  // 2) Prefer boxscore.json to derive two team rows (names from home/away)
+  try{
+    const box = await tryFetchJSON(DATA_BASES, BOX_FILE);
+    const game = box.game || box;
+    const home = game.home || game.host || {}, away = game.away || game.visitor || {};
+    const nameH = home.name || home.team || home.abbr || home.id || 'Home';
+    const nameA = away.name || away.team || away.abbr || away.id || 'Away';
+
+    // totals from team.totals or sum of players
+    function computeTeamLine(team, teamLabel){
+      const t = {name: teamLabel, gp:1, pts: Number(team.score||team.points||0), reb:0, ast:0, stl:0, blk:0};
+      const tt = team.totals || {};
+      t.reb += Number(tt.reb||tt.rebounds||0);
+      t.ast += Number(tt.ast||tt.assists||0);
+      t.stl += Number(tt.stl||tt.steals||0);
+      t.blk += Number(tt.blk||tt.blocks||0);
+      const players = Array.isArray(team.players)?team.players:[];
+      const sum=(key,alts)=> players.reduce((s,p)=> s + Number(p[key] ?? (alts?alts(p):0) || 0), 0);
+      if(!t.reb) t.reb = sum('reb', p=> p.rebounds);
+      if(!t.ast) t.ast = sum('ast', p=> p.assists);
+      if(!t.stl) t.stl = sum('stl', p=> p.steals);
+      if(!t.blk) t.blk = sum('blk', p=> p.blocks);
+      return t;
+    }
+    const th = computeTeamLine(home, nameH);
+    const ta = computeTeamLine(away, nameA);
+    const arr=[th, ta].map(t=>({name:t.name, ppg:t.pts, rpg:t.reb, apg:t.ast, spg:t.stl, bpg:t.blk}));
+    const cats=[['POINTS PER GAME','ppg',1],['REBOUNDS PER GAME','rpg',1],['ASSISTS PER GAME','apg',1],['STEALS PER GAME','spg',1],['BLOCKS PER GAME','bpg',1]];
+    for(const [label,key,d] of cats){
+      const top=[...arr].sort(by(key)).slice(0,5).map(t=>({name:t.name, val: round(t[key],d)}));
+      renderLeaders(wrap,label,top);
+    }
+    return;
+  }catch(e){ /* no boxscore, fall through */ }
+
+  // 3) Derive from games.json (names from home.name/away.name when possible)
   try{
     const raw = await tryFetchJSON(DATA_BASES, GAMES_FILE);
     const games = Array.isArray(raw) ? raw : (raw.games || raw.schedule || raw.data || []);
-    const teams = new Map(); // name -> totals
-    function ensure(name){ if(!teams.has(name)) teams.set(name,{gp:0,pts:0,reb:0,ast:0,stl:0,blk:0}); return teams.get(name); }
+    if(!games.length){ showEmpty(wrap,'No games found for team leaders.'); return; }
+    const teams = new Map();
+    const ensure = n => { if(!teams.has(n)) teams.set(n,{gp:0,pts:0,reb:0,ast:0,stl:0,blk:0}); return teams.get(n); };
     games.forEach(g=>{
-      const home=g.home||g.host||g.team1||g.alpha; const away=g.away||g.visitor||g.team2||g.beta;
-      if(home){ const t=ensure(home.name||home.team||home.abbr||home.id||'HOME'); t.gp++; t.pts += Number(home.score||home.points||0);
-        const tt=home.totals||{}; t.reb+=Number(tt.reb||tt.rebounds||0); t.ast+=Number(tt.ast||tt.assists||0); t.stl+=Number(tt.stl||tt.steals||0); t.blk+=Number(tt.blk||tt.blocks||0);
-      }
-      if(away){ const t=ensure(away.name||away.team||away.abbr||away.id||'AWAY'); t.gp++; t.pts += Number(away.score||away.points||0);
-        const tt=away.totals||{}; t.reb+=Number(tt.reb||tt.rebounds||0); t.ast+=Number(tt.ast||tt.assists||0); t.stl+=Number(tt.stl||tt.steals||0); t.blk+=Number(tt.blk||tt.blocks||0);
-      }
-      // if totals missing, try sum players
-      const players = extractPlayersGeneric(g);
-      const sum=(list,key)=> list.reduce((s,x)=> s + Number(x[key]||0), 0);
-      if(players.length){
-        const homeList = players.filter(p=>String(p.team).toUpperCase().includes('HOME'));
-        const awayList = players.filter(p=>String(p.team).toUpperCase().includes('AWAY'));
-        if(home && homeList.length){ const t=ensure(home.name||home.team||home.abbr||home.id||'HOME'); t.reb+=sum(homeList,'reb'); t.ast+=sum(homeList,'ast'); t.stl+=sum(homeList,'stl'); t.blk+=sum(homeList,'blk'); }
-        if(away && awayList.length){ const t=ensure(away.name||away.team||away.abbr||away.id||'AWAY'); t.reb+=sum(awayList,'reb'); t.ast+=sum(awayList,'ast'); t.stl+=sum(awayList,'stl'); t.blk+=sum(awayList,'blk'); }
-      }
+      const home=g.home||g.host||{}; const away=g.away||g.visitor||{};
+      const nameH = home.name || home.team || home.abbr || home.id || 'Home';
+      const nameA = away.name || away.team || away.abbr || away.id || 'Away';
+      const H=ensure(nameH), A=ensure(nameA);
+      H.gp++; A.gp++;
+      H.pts += Number(home.score||home.points||0);
+      A.pts += Number(away.score||away.points||0);
+      const addTotals = (t,tt)=>{ t.reb += Number(tt.reb||tt.rebounds||0); t.ast+=Number(tt.ast||tt.assists||0); t.stl+=Number(tt.stl||tt.steals||0); t.blk+=Number(tt.blk||tt.blocks||0); };
+      if(home.totals) addTotals(H, home.totals);
+      if(away.totals) addTotals(A, away.totals);
     });
-    const arr=[...teams.entries()].map(([name,t])=>({name, ppg:t.pts/(t.gp||1), rpg:t.reb/(t.gp||1), apg:t.ast/(t.gp||1), spg:t.stl/(t.gp||1), bpg:t.blk/(t.gp||1)}));
-    if(!arr.length){ showEmpty(wrap,'Team leaders need games.json with teams or players.'); return; }
+    const arr=[...teams.entries()].map(([name,t])=>({name, ppg:t.pts/(t.gp or 1), rpg:t.reb/(t.gp or 1), apg:t.ast/(t.gp or 1), spg:t.stl/(t.gp or 1), bpg:t.blk/(t.gp or 1)}))
     const cats=[['POINTS PER GAME','ppg',1],['REBOUNDS PER GAME','rpg',1],['ASSISTS PER GAME','apg',1],['STEALS PER GAME','spg',1],['BLOCKS PER GAME','bpg',1]];
     for(const [label,key,d] of cats){
       const top=[...arr].sort(by(key)).slice(0,5).map(t=>({name:t.name, val: round(t[key],d)}));
