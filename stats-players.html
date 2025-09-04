@@ -1,29 +1,35 @@
-<!doctype html><html><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Player Statistics</title><link rel="stylesheet" href="mini.css">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
-</head><body><main class="container" style="padding:22px 0">
-<h1>Player Statistics</h1>
-<div class="controls"><input id="q" placeholder="Search player or team"><label>Team: <select id="team"><option value=''>All</option></select></label><button id="export">Export CSV</button></div>
-<div class="card"><div class="table responsive">
-<table id="tbl"><thead><tr><th>Player</th><th>Team</th><th>GP</th><th>PTS</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TOV</th><th>FGM</th><th>FGA</th><th>FG%</th><th>3PM</th><th>3PA</th><th>3P%</th></tr></thead><tbody></tbody></table>
-</div></div>
-<p class="muted" style="margin-top:10px">Tip: filter by team, search by player.</p>
-</main>
-<script>
-async function get(u){try{const r=await fetch(u,{cache:'no-store'});if(!r.ok)throw new Error(r.status);return await r.json()}catch(e){console.error(e);return[]}}
-function pct(m,a){return a?((m/a)*100).toFixed(1)+'%':'—'}
-function toCSV(rows){const ks=Object.keys(rows[0]||{});const e=v=>('"'+String(v).replaceAll('"','""')+'"');return [ks.map(e).join(','),...rows.map(r=>ks.map(k=>e(r[k]??'')).join(','))].join('\n')}
-(async()=>{
- const data=await get('assets/data/players.json');
- const sel=document.getElementById('team');[...new Set(data.map(p=>p.team).filter(Boolean))].sort().forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=t;sel.appendChild(o)});
- function render(){
-   const q=document.getElementById('q').value.toLowerCase();const t=sel.value;const b=document.querySelector('#tbl tbody');b.innerHTML='';
-   const rows=data.filter(p=>(!t||p.team===t)&&(!q||(p.name||'').toLowerCase().includes(q)||(p.team||'').toLowerCase().includes(q)));
-   if(!rows.length){b.innerHTML='<tr><td colspan=15 style="padding:16px;color:#a8b4d8">No players match / JSON missing.</td></tr>';return;}
-   rows.forEach(p=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${p.name}</td><td>${p.team||''}</td><td>${p.gp||0}</td><td>${p.pts||0}</td><td>${p.reb||0}</td><td>${p.ast||0}</td><td>${p.stl||0}</td><td>${p.blk||0}</td><td>${p.tov||0}</td><td>${p.fgm||0}</td><td>${p.fga||0}</td><td>${pct(p.fgm||0,p.fga||0)}</td><td>${p.tpm||0}</td><td>${p.tpa||0}</td><td>${pct(p.tpm||0,p.tpa||0)}</td>`;b.appendChild(tr)});
-   document.getElementById('export').onclick=()=>{const out=rows.map(p=>({name:p.name,team:p.team,gp:p.gp,pts:p.pts,reb:p.reb,ast:p.ast,stl:p.stl,blk:p.blk,tov:p.tov,fgm:p.fgm,fga:p.fga,fg_pct:(p.fga?((p.fgm/p.fga)*100).toFixed(1):''),tpm:p.tpm,tpa:p.tpa,tp_pct:(p.tpa?((p.tpm/p.tpa)*100).toFixed(1):'')}));const blob=new Blob([toCSV(out)],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='players_export.csv';a.click()}
- }
- ['q','team'].forEach(id=>document.getElementById(id).addEventListener('input',render));render();
-})();
-</script></body></html>
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Euro2KLeague — Player Stats Leaders</title>
+  <link rel="stylesheet" href="stats.css">
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <div class="logo">E2K</div>
+      <h1>Stats</h1>
+      <div class="subnav">
+        <a class="active" href="players.html">Player Leaders</a>
+        <a href="teams.html">Team Leaders</a>
+      </div>
+    </div>
+
+    <div class="section-title">
+      <h2>Playoffs Leaders</h2>
+      <span class="badge">BETA</span>
+    </div>
+
+    <div class="grid">
+      <div class="leaders" id="player-leaders"></div>
+      <aside class="sidebar" id="sidebar-right"></aside>
+    </div>
+
+    <footer>Euro2KLeague — stats layout pack • Generated 2025-09-04</footer>
+  </div>
+  <script src="stats.js"></script>
+</body>
+</html>
