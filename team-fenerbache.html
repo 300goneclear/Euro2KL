@@ -1,99 +1,87 @@
-<!doctype html><html lang='en'><head>
-<meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fenerbache · Euro2KLeague</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="mini.css">
 <style>
-.team-hero{{position:relative;min-height:44vh;background:linear-gradient(90deg,#041E42,#FEDD00);}}
-.team-hero .overlay{{position:absolute;inset:0;background:radial-gradient(600px 300px at 80% 10%, rgba(0,0,0,.22), transparent 60%)}}
-.team-hero .wrap{{position:relative;z-index:1;display:flex;align-items:center;gap:24px;padding:36px 0}}
-.team-hero img.logo{{height:96px;background:#fff;border-radius:16px;padding:10px;border:2px solid rgba(0,0,0,.2)}}
-.roster-card{{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin:22px 0}}
-.roster-card h2{{font-family:'Barlow Condensed',Inter,sans-serif;padding:12px 16px;margin:0;border-bottom:1px solid var(--border)}}
-table{{width:100%;border-collapse:collapse}} th,td{{padding:10px;border-bottom:1px solid var(--border);text-align:right}} th:first-child, td:first-child{{text-align:left}} th{{background:rgba(255,255,255,.04)}}
-.grid-cards{{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;padding:14px}}
-.card .inner{{padding:14px}}
-</style></head><body>
-<header class="site-header"><div class="container nav-wrap">
-  <a class="brand" href="index.html"><img src="assets/logo.png" class="logo" alt=""><span class="brand-text">Euro2KLeague</span></a>
-  <nav class="nav"><a href="teams.html">Teams</a><a href="standings.html">Standings</a><a href="stats-players.html">Stats</a><a href="leaders-players.html">Leaders</a></nav>
-</div></header>
-<main>
-  <section class="team-hero"><div class="overlay"></div>
-    <div class="container wrap"><img class="logo" src="assets/teams/fenerbache.svg" alt="Fenerbache"><div><h1>Fenerbache</h1><p class="dek">Team roster and season stats (auto-synced from site data).</p></div></div>
+.team-hero{{background:linear-gradient(90deg,#041E42,#FEDD00);padding:22px 0;margin-bottom:12px}}
+.badge{{background:#fff;color:#000}}
+</style>
+</head><body>
+<main class="container" style="padding:12px 0 28px">
+  <section class="card" style="padding:16px">
+    <h1 style="margin:0 0 6px">Fenerbache <span class="badge">Official</span></h1>
+    <p class="muted" style="margin:0">Team roster and season stats (auto-synced from site data).</p>
   </section>
 
-  <section class="container roster-card">
-    <h2>Roster & Averages</h2>
-    <div class="table responsive"><table id="roster"><thead><tr><th>Player</th><th>GP</th><th>PPG</th><th>RPG</th><th>APG</th><th>SPG</th><th>BPG</th><th>FG%</th><th>3P%</th></tr></thead><tbody></tbody></table></div>
-  </section>
-
-  <section class="container roster-card" id="team-dash">
-    <h2>Fenerbache Dashboard</h2>
-    <div class="grid-cards">
-      <div class="card"><div class="inner"><div class="muted">Record</div><div id="rec" style="font-size:28px;font-weight:800">—</div><div id="form" class="muted" style="margin-top:6px">Form: —</div></div></div>
-      <div class="card"><div class="inner"><div class="muted">Points For / Against</div><div id="pfpa" style="font-size:28px;font-weight:800">—</div><div id="diff" class="muted" style="margin-top:6px">Diff: —</div></div></div>
-      <div class="card"><div class="inner"><div class="muted">Last Result</div><div id="last" style="font-size:18px;font-weight:700;line-height:1.35">—</div></div></div>
+  <section class="card" style="margin-top:16px">
+    <h2 style="padding:12px 16px;margin:0;border-bottom:1px solid var(--border)">Roster & Averages</h2>
+    <div class="table responsive">
+      <table id="roster"><thead><tr>
+        <th>Player</th><th>GP</th><th>PPG</th><th>RPG</th><th>APG</th><th>SPG</th><th>BPG</th><th>FG%</th><th>3P%</th>
+      </tr></thead><tbody></tbody></table>
     </div>
   </section>
 
-  <section class="container roster-card" id="team-schedule">
-    <h2>Schedule</h2>
-    <div class="table responsive"><table id="sched"><thead><tr><th style="text-align:left">Date</th><th>Opponent</th><th>Result</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+  <section class="card" style="margin-top:16px">
+    <h2 style="padding:12px 16px;margin:0;border-bottom:1px solid var(--border)">Fenerbache Dashboard</h2>
+    <div class="table responsive" style="padding:12px 16px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+        <div class="card"><div class="inner" style="padding:14px"><div class="muted">Record</div><div id="rec" style="font-size:28px;font-weight:800">—</div><div id="form" class="muted" style="margin-top:6px">Form: —</div></div></div>
+        <div class="card"><div class="inner" style="padding:14px"><div class="muted">Points For / Against</div><div id="pfpa" style="font-size:28px;font-weight:800">—</div><div id="diff" class="muted" style="margin-top:6px">Diff: —</div></div></div>
+        <div class="card"><div class="inner" style="padding:14px"><div class="muted">Last Result</div><div id="last" style="font-size:18px;font-weight:700;line-height:1.35">—</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:16px">
+    <h2 style="padding:12px 16px;margin:0;border-bottom:1px solid var(--border)">Schedule</h2>
+    <div class="table responsive">
+      <table id="sched"><thead><tr><th>Date</th><th>Opponent</th><th>Result</th><th>Status</th></tr></thead><tbody></tbody></table>
+    </div>
   </section>
 </main>
 
 <script>
-async function loadTeam(team){{
+async function safeJson(url){{ try{{ const r=await fetch(url,{{cache:'no-store'}}); if(!r.ok) throw new Error(r.status); return await r.json(); }}catch(e){{ console.error('load fail',url,e); return []; }} }}
+function pct(m,a){{ return a? ((m/a)*100).toFixed(1)+'%':'—'; }}
+function per(n,g){{ return g? (n/g).toFixed(1):'0.0'; }}
+(async function(){
+  const TEAM = 'Fenerbache';
   const [players, standings, games] = await Promise.all([
-    fetch('assets/data/players.json').then(r=>r.json()).catch(()=>[]),
-    fetch('assets/data/standings.json').then(r=>r.json()).catch(()=>[]),
-    fetch('assets/data/games.json').then(r=>r.json()).catch(()=>[])
+    safeJson('assets/data/players.json'), safeJson('assets/data/standings.json'), safeJson('assets/data/games.json')
   ]);
-  const rows = players.filter(p => (p.team||'').toLowerCase()===team.toLowerCase());
+
+  // Roster
+  const rs = players.filter(p => (p.team||'').toLowerCase()===TEAM.toLowerCase());
   const body = document.querySelector('#roster tbody');
-  function pct(m,a){{ return a? ((m/a)*100).toFixed(1)+'%':'—'; }}
-  function per(n,g){{ return g? (n/g).toFixed(1):'0.0'; }}
-  rows.forEach(p => {{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${{p.name}}</td><td>${{p.gp||0}}</td>
-      <td>${{per(p.pts||0, p.gp||1)}}</td>
-      <td>${{per(p.reb||0, p.gp||1)}}</td>
-      <td>${{per(p.ast||0, p.gp||1)}}</td>
-      <td>${{per(p.stl||0, p.gp||1)}}</td>
-      <td>${{per(p.blk||0, p.gp||1)}}</td>
-      <td>${{pct(p.fgm||0, p.fga||0)}}</td>
-      <td>${{pct(p.tpm||0, p.tpa||0)}}</td>`;
+  if(!rs.length){{ body.innerHTML = '<tr><td colspan=9 style="padding:16px;color:#a8b4d8">No players yet for this team.</td></tr>'; }}
+  rs.forEach(p=>{{
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td>${{p.name}}</td><td>${{p.gp||0}}</td><td>${{per(p.pts||0,p.gp||1)}}</td><td>${{per(p.reb||0,p.gp||1)}}</td><td>${{per(p.ast||0,p.gp||1)}}</td><td>${{per(p.stl||0,p.gp||1)}}</td><td>${{per(p.blk||0,p.gp||1)}}</td><td>${{pct(p.fgm||0,p.fga||0)}}</td><td>${{pct(p.tpm||0,p.tpa||0)}}</td>`;
     body.appendChild(tr);
   }});
 
-  const row = standings.find(s => (s.team||'').toLowerCase()===team.toLowerCase()) || {{wins:0,losses:0,pf:0,pa:0}};
-  document.getElementById('rec').textContent = `${{row.wins}}–${{row.losses}}`;
-  document.getElementById('pfpa').textContent = `${{row.pf}} / ${{row.pa}}`;
-  const d = row.pf - row.pa; document.getElementById('diff').textContent = `Diff: ${{d>0?'+':''}}${{d}}`;
+  // Dashboard
+  const s = standings.find(x => (x.team||'').toLowerCase()===TEAM.toLowerCase()) || {{wins:0,losses:0,pf:0,pa:0}};
+  document.getElementById('rec').textContent = `${{s.wins}}–${{s.losses}}`;
+  document.getElementById('pfpa').textContent = `${{s.pf}} / ${{s.pa}}`;
+  const d = (s.pf - s.pa); document.getElementById('diff').textContent = `Diff: ${{d>0?'+':''}}${{d}}`;
 
-  const finals = games.filter(g => g.status==='final' && (g.home===team || g.away===team)).slice().reverse();
-  const last = finals[0];
-  if(last){{
-    const opp = last.home===team ? last.away : last.home;
-    const hs = last.home===team ? last.homeScore : last.awayScore;
-    const as = last.home===team ? last.awayScore : last.homeScore;
-    const outcome = hs>as ? 'W' : (hs<as ? 'L' : 'T');
-    document.getElementById('last').innerHTML = `<strong>${{outcome}}</strong> vs ${{opp}} — ${{
-hs}}–${{as}} (${{last.date||'TBA'}})`;
+  const finals = games.filter(g => g.status==='final' && (g.home===TEAM || g.away===TEAM)).slice().reverse();
+  if(finals[0]){{
+    const g = finals[0]; const opp = g.home===TEAM?g.away:g.home;
+    const hs = g.home===TEAM?g.homeScore:g.awayScore; const as = g.home===TEAM?g.awayScore:g.homeScore;
+    const outcome = hs>as?'W':(hs<as?'L':'T'); document.getElementById('last').innerHTML = `<strong>${{outcome}}</strong> vs ${{opp}} — ${{hs}}–${{as}} (${{g.date||'TBA'}})`;
   }}
 
+  // Schedule
   const body2 = document.querySelector('#sched tbody'); body2.innerHTML='';
-  games.filter(g => g.home===team || g.away===team).forEach(g => {{
-    const opp = g.home===team ? g.away : g.home;
-    const result = g.status==='final' ? `${{g.home===team?g.homeScore:g.awayScore}}–${{g.home===team?g.awayScore:g.homeScore}}` : '—';
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td style="text-align:left">${{g.date||'TBA'}}</td><td>${{opp}}</td><td>${{result}}</td><td>${{g.status}}</td>`;
-    body2.appendChild(tr);
+  games.filter(g => g.home===TEAM || g.away===TEAM).forEach(g=>{{
+    const opp = g.home===TEAM?g.away:g.home;
+    const res = g.status==='final'?`${{g.home===TEAM?g.homeScore:g.awayScore}}–${{g.home===TEAM?g.awayScore:g.homeScore}}`:'—';
+    const tr = document.createElement('tr'); tr.innerHTML = `<td>${{g.date||'TBA'}}</td><td>${{opp}}</td><td>${{res}}</td><td>${{g.status}}</td>`; body2.appendChild(tr);
   }});
-}}
-loadTeam('Fenerbache');
+})();
 </script>
-<script src="script.js"></script>
 </body></html>
