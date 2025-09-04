@@ -3,7 +3,6 @@
     "id": 1,
     "name": "IE9RENI",
     "team": "Fenerbache",
-    "pos": "",
     "gp": 1,
     "mins": 0,
     "pts": 24,
@@ -18,14 +17,12 @@
     "tpa": 7,
     "ftm": 0,
     "fta": 0,
-    "pf": 0,
-    "plusminus": 0
+    "pf": 0
   },
   {
     "id": 2,
     "name": "CanBoym",
     "team": "Fenerbache",
-    "pos": "",
     "gp": 1,
     "mins": 0,
     "pts": 26,
@@ -40,14 +37,12 @@
     "tpa": 6,
     "ftm": 0,
     "fta": 0,
-    "pf": 3,
-    "plusminus": 0
+    "pf": 3
   },
   {
     "id": 3,
     "name": "LOVEBattleDeaD",
     "team": "Fenerbache",
-    "pos": "",
     "gp": 1,
     "mins": 0,
     "pts": 6,
@@ -62,14 +57,12 @@
     "tpa": 3,
     "ftm": 0,
     "fta": 0,
-    "pf": 3,
-    "plusminus": 0
+    "pf": 3
   },
   {
     "id": 4,
     "name": "Sabri_2K",
     "team": "Fenerbache",
-    "pos": "",
     "gp": 1,
     "mins": 0,
     "pts": 3,
@@ -84,14 +77,12 @@
     "tpa": 2,
     "ftm": 0,
     "fta": 0,
-    "pf": 0,
-    "plusminus": 0
+    "pf": 0
   },
   {
     "id": 5,
     "name": "KadoTheProblem_",
     "team": "Fenerbache",
-    "pos": "",
     "gp": 1,
     "mins": 0,
     "pts": 16,
@@ -106,14 +97,12 @@
     "tpa": 0,
     "ftm": 0,
     "fta": 0,
-    "pf": 2,
-    "plusminus": 0
+    "pf": 2
   },
   {
     "id": 6,
     "name": "PTCreative",
     "team": "Asura",
-    "pos": "",
     "gp": 1,
     "mins": 0,
     "pts": 30,
@@ -128,14 +117,12 @@
     "tpa": 10,
     "ftm": 0,
     "fta": 0,
-    "pf": 0,
-    "plusminus": 0
+    "pf": 0
   },
   {
     "id": 7,
     "name": "itsMomow",
     "team": "Asura",
-    "pos": "",
     "gp": 1,
     "mins": 0,
     "pts": 17,
@@ -150,14 +137,12 @@
     "tpa": 7,
     "ftm": 0,
     "fta": 0,
-    "pf": 1,
-    "plusminus": 0
+    "pf": 1
   },
   {
     "id": 8,
     "name": "v-Choper",
     "team": "Asura",
-    "pos": "",
     "gp": 1,
     "mins": 0,
     "pts": 9,
@@ -172,14 +157,12 @@
     "tpa": 1,
     "ftm": 0,
     "fta": 0,
-    "pf": 3,
-    "plusminus": 0
+    "pf": 3
   },
   {
     "id": 9,
     "name": "ItsHarisco",
     "team": "Asura",
-    "pos": "",
     "gp": 1,
     "mins": 0,
     "pts": 6,
@@ -194,14 +177,12 @@
     "tpa": 5,
     "ftm": 0,
     "fta": 0,
-    "pf": 2,
-    "plusminus": 0
+    "pf": 2
   },
   {
     "id": 10,
     "name": "v_Tchek",
     "team": "Asura",
-    "pos": "",
     "gp": 1,
     "mins": 0,
     "pts": 6,
@@ -216,7 +197,6 @@
     "tpa": 1,
     "ftm": 0,
     "fta": 0,
-    "pf": 1,
-    "plusminus": 0
+    "pf": 1
   }
 ]
