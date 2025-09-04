@@ -3,5 +3,5 @@
 *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,Arial}
 .container{width:min(1100px,92%);margin-inline:auto}h1,h2{font-family:'Barlow Condensed',Inter,sans-serif}
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
-.table.responsive{overflow:auto}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid var(--border)}th{text-align:left;background:rgba(255,255,255,.05)}
-.muted{color:var(--muted)}
+.table{overflow:auto}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid var(--border)}th{text-align:left;background:rgba(255,255,255,.05)}
+.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;padding:14px}
