@@ -1,15 +1,10 @@
 
-// Auto-detect data folder path; override with ?data=/Euro2KL/data if needed
-function guessDataBases(){
-  const qs = new URLSearchParams(location.search);
-  const override = window.DATA_BASE_OVERRIDE || qs.get('data');
-  if(override) return [override];
-  const parts = location.pathname.split('/').filter(Boolean);
-  return ['data','/data', parts.length?('/'+parts[0]+'/data'):null].filter(Boolean);
-}
-async function tryFetchJSON(paths, file){
+// Hard-coded data base for your repo:
+const DATA_BASES = ['/Euro2KL/assets/data', 'assets/data', '/assets/data']; // tried in this order
+
+async function tryFetchJSON(bases, file){
   const errs=[];
-  for(const base of paths){
+  for(const base of bases){
     const url = `${base.replace(/\/$/,'')}/${file.replace(/^\//,'')}`;
     try{ const r = await fetch(url,{cache:'no-store'}); if(r.ok) return r.json(); errs.push(`${url} → ${r.status}`);}catch(e){errs.push(`${url} → ${e.message}`);}
   }
@@ -25,22 +20,22 @@ function renderLeaders(el,title,rows){ const card=document.createElement('div');
 }
 function showEmpty(where,msg,details){ const div=document.createElement('div'); div.className='empty'; div.innerHTML=`<strong>Couldn’t load data.</strong> ${msg}${details?`<div class="kicker">${details}</div>`:''}`; where.appendChild(div); }
 
-async function buildPlayerLeaders(paths){
+async function buildPlayerLeaders(){
   const wrap=document.querySelector('#player-leaders');
   try{
-    const players=await tryFetchJSON(paths,'players.json');
+    const players=await tryFetchJSON(DATA_BASES,'players.json');
     players.forEach(p=>{ if(p.tpm==null && p.tp_pct!=null && p.ppg!=null) p.tpm=Math.max(0,(p.ppg*(p.tp_pct||0))/3); });
     const cats=[['POINTS PER GAME','ppg',1],['REBOUNDS PER GAME','rpg',1],['ASSISTS PER GAME','apg',1],['STEALS PER GAME','spg',1],['BLOCKS PER GAME','bpg',1],['FIELD GOAL PERCENTAGE','fg_pct',3,v=>round(100*v,1)+'%'],['THREE POINTERS MADE','tpm',1],['THREE POINT PERCENTAGE','tp_pct',3,v=>round(100*v,1)+'%'],['FREE THROW PERCENTAGE','ft_pct',3,v=>round(100*v,1)+'%']];
     for(const [label,key,d,fmt] of cats){ const top=[...players].sort(by(key)).slice(0,5).map(p=>({name:nameFrom(p),val:fmt?fmt(p[key]):round(p[key],d)})); renderLeaders(wrap,label,top); }
-  }catch(err){ showEmpty(wrap,'Add a lowercase “data/” folder at your site root.', (err._e2kErrors||[]).join('<br>')); }
+  }catch(err){ showEmpty(wrap,'Check /Euro2KL/assets/data/players.json is published.', (err._e2kErrors||[]).join('<br>')); }
 }
-async function buildTeamLeaders(paths){
+async function buildTeamLeaders(){
   const wrap=document.querySelector('#team-leaders');
   try{
     let teamsStats=null, players=null, teams=null;
-    try{teamsStats=await tryFetchJSON(paths,'team_stats.json');}catch(e){}
-    try{players=await tryFetchJSON(paths,'players.json');}catch(e){}
-    try{teams=await tryFetchJSON(paths,'teams.json');}catch(e){}
+    try{teamsStats=await tryFetchJSON(DATA_BASES,'team_stats.json');}catch(e){}
+    try{players=await tryFetchJSON(DATA_BASES,'players.json');}catch(e){}
+    try{teams=await tryFetchJSON(DATA_BASES,'teams.json');}catch(e){}
     const tname=id=>Array.isArray(teams)?((teams.find(t=>(t.id||t.abbr)===id||t.abbr===id)||{}).name||id):id;
     let byTeam={};
     if(Array.isArray(teamsStats)&&teamsStats.length&&(teamsStats[0].ppg!=null)){
@@ -59,10 +54,9 @@ async function buildTeamLeaders(paths){
     const arr=Object.entries(byTeam).map(([id,s])=>({name:tname(id),...s}));
     const cats=[['POINTS PER GAME','ppg',1],['REBOUNDS PER GAME','rpg',1],['ASSISTS PER GAME','apg',1],['STEALS PER GAME','spg',1],['BLOCKS PER GAME','bpg',1],['FIELD GOAL PERCENTAGE','fg_pct',3,v=>round(100*v,1)+'%'],['THREE POINT PERCENTAGE','tp_pct',3,v=>round(100*v,1)+'%'],['FREE THROW PERCENTAGE','ft_pct',3,v=>round(100*v,1)+'%']];
     for(const [label,key,d,fmt] of cats){ const top=[...arr].sort(by(key)).slice(0,5).map(t=>({name:t.name,val:fmt?fmt(t[key]):round(t[key],d)})); renderLeaders(wrap,label,top); }
-  }catch(err){ showEmpty(wrap,'Create /data/team_stats.json or /data/players.json to aggregate.', (err._e2kErrors||[]).join('<br>')); }
+  }catch(err){ showEmpty(wrap,'Check /Euro2KL/assets/data/team_stats.json (or players.json).', (err._e2kErrors||[]).join('<br>')); }
 }
 window.addEventListener('DOMContentLoaded', async ()=>{
-  const paths=guessDataBases();
-  if(document.querySelector('#player-leaders')) await buildPlayerLeaders(paths);
-  if(document.querySelector('#team-leaders')) await buildTeamLeaders(paths);
+  if(document.querySelector('#player-leaders')) await buildPlayerLeaders();
+  if(document.querySelector('#team-leaders')) await buildTeamLeaders();
 });

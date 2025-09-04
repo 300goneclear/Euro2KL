@@ -1,5 +1,5 @@
 
-/* Euro2KLeague Stats Lookalike (leaders pages) */
+/* Euro2KLeague Stats Lookalike */
 :root{ --bg:#0b0d12; --panel:#11151c; --panel-2:#161b22; --text:#e7ecf3; --muted:#a6b3c2; --accent:#ffd166; --divider:#202734; }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif}

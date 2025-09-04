@@ -1,15 +1,10 @@
 
-Euro2KLeague Full Fix v36
--------------------------
-Upload everything to your repo.
+This build is configured for GitHub project pages with data under:
+  /Euro2KL/assets/data
 
-Critical data files (must live at /assets/data/):
-  - players.json
-  - standings.json
-  - games.json
+Files the pages request:
+  /Euro2KL/assets/data/players.json
+  /Euro2KL/assets/data/team_stats.json  (or players.json used to aggregate)
+  /Euro2KL/assets/data/teams.json       (optional, for pretty team names)
 
-Pages included:
-  - standings.html
-  - stats-players.html
-  - stats-players-inline.html (works even if JSON can't be fetched)
-  - mini.css
+If you ever move the folder, open stats.js and change DATA_BASES accordingly.
