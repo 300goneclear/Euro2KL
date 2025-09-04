@@ -1,55 +1,21 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Teams · Euro2KLeague</title>
-  <meta name="description" content="Euro2KLeague — Europe's competitive NBA 2K esports league.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body id="page-teams">
-  <header class="site-header">
-    <div class="container nav-wrap">
-      <a class="brand" href="index.html">
-        <img src="assets/logo.png" alt="Euro2KLeague logo" class="logo">
-        <span class="brand-text">Euro2KLeague</span>
-      </a>
-      <nav class="nav">
-        <a href="index.html" class="nav-link">League</a>
-        <a href="teams.html" class="nav-link">Teams</a>
-        <a href="schedule.html" class="nav-link">Schedule</a>
-        <a href="standings.html" class="nav-link">Standings</a>
-        <a href="stats-players.html" class="nav-link">Stats</a>
-        <a href="leaders-players.html" class="nav-link">Leaders</a>
-      </nav>
-      <button class="nav-toggle" aria-label="Open Menu">☰</button>
-    </div>
-  </header>
-
-  <main class="page">
-    <section class="page-hero">
-      <div class="container">
-        <h1 class="page-title">Teams</h1>
-        <p class="dek">Meet the competitors of the Euro2KLeague.</p>
-      </div>
-    </section>
-    <section class="container">
-      <div id="teams-grid" class="teams-grid"></div>
-    </section>
-  </main>
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <div class="foot-brand">
-        <img src="assets/logo.png" class="logo small" alt="Euro2KLeague">
-        <div>© <span id="year"></span> Euro2KLeague — All rights reserved.</div>
-      </div>
-      <div class="foot-links">
-        <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a>
-      </div>
-    </div>
-  </footer>
-  <script src="script.js"></script>
-</body></html>
+<!doctype html><html lang='en'><head>
+<meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Teams · Euro2KLeague</title>
+<link rel="stylesheet" href="styles.css">
+</head><body>
+<header class="site-header"><div class="container nav-wrap">
+  <a class="brand" href="index.html"><img src="assets/logo.png" class="logo" alt=""><span class="brand-text">Euro2KLeague</span></a>
+  <nav class="nav"><a href="standings.html">Standings</a><a href="stats-players.html">Stats</a><a href="leaders-players.html">Leaders</a></nav>
+</div></header>
+<main class="container"><h1 style="margin:18px 0">Teams</h1>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px">
+  <a class="card" href="team-fenerbache.html" style="text-decoration:none;color:var(--ink)">
+    <div style="height:90px;background:linear-gradient(90deg,#041E42,#FEDD00)"></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:12px"><img src="assets/teams/fenerbache.svg" style="height:56px;background:#fff;border-radius:12px;padding:8px;border:1px solid var(--border)"><h3>Fenerbache</h3></div>
+  </a>
+  <a class="card" href="team-asura.html" style="text-decoration:none;color:var(--ink)">
+    <div style="height:90px;background:linear-gradient(90deg,#0C49FF,#FFB000)"></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:12px"><img src="assets/teams/asura.svg" style="height:56px;background:#fff;border-radius:12px;padding:8px;border:1px solid var(--border)"><h3>Asura</h3></div>
+  </a>
+</div></main>
+<script src="script.js"></script></body></html>
