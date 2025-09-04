@@ -18,15 +18,11 @@
   const menu = document.createElement('aside'); menu.className='side-menu';
   menu.innerHTML = `
     <div class="top">
-      <div style="display:flex;align-items:center;gap:10px">
-        <img src="assets/logo.png" class="logo" alt="Euro2KLeague">
-        <strong>Euro2KLeague</strong>
-      </div>
       <button class="close" aria-label="Close">×</button>
     </div>
     <nav>
       <a href="index.html">Home</a>
-<a href="stats-players.html">Player Stats</a>
+      <a href="stats-players.html">Player Stats</a>
       <a href="stats-teams.html">Team Stats</a>
       <a href="leaders-players.html">Leaders — Players</a>
       <a href="leaders-teams.html">Leaders — Teams</a>
