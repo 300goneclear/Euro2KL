@@ -1,0 +1,16 @@
+[
+  {
+    "team": "Fenerbache",
+    "wins": 1,
+    "losses": 0,
+    "pf": 75,
+    "pa": 68
+  },
+  {
+    "team": "Asura",
+    "wins": 0,
+    "losses": 1,
+    "pf": 68,
+    "pa": 75
+  }
+]
