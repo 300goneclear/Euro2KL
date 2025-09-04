@@ -1,5 +1,5 @@
 
-/* Euro2KLeague Stats Lookalike */
+/* Euro2KLeague Stats Lookalike (games.json primary) */
 :root{ --bg:#0b0d12; --panel:#11151c; --panel-2:#161b22; --text:#e7ecf3; --muted:#a6b3c2; --accent:#ffd166; --divider:#202734; }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif}
@@ -11,6 +11,9 @@ a{color:#69a7ff;text-decoration:none} a:hover{text-decoration:underline}
 .subnav{display:flex;gap:12px;margin-left:auto}
 .subnav a{padding:8px 12px;border:1px solid var(--divider);border-radius:6px;background:var(--panel);color:var(--text)}
 .subnav a.active{background:#1b2330;border-color:#2a3445}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:8px 0}
+.section-title h2{font-size:18px;margin:0}
+.badge{display:inline-block;font-size:12px;color:#0b0d12;background:var(--accent);padding:2px 8px;border-radius:999px;font-weight:700;letter-spacing:.02em}
 .grid{display:grid;grid-template-columns:2fr 1fr;gap:16px}
 .leaders{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;min-height:120px}
 .card{background:var(--panel);border:1px solid var(--divider);border-radius:10px;overflow:hidden}
@@ -20,14 +23,8 @@ a{color:#69a7ff;text-decoration:none} a:hover{text-decoration:underline}
 .card .table th{color:var(--muted);text-align:left;font-weight:600}
 .card .table td.rank{width:24px;text-align:right;color:var(--muted)}
 .card .table tr:last-child td{border-bottom:none}
-.section-title{display:flex;align-items:center;justify-content:space-between;margin:8px 0}
-.section-title h2{font-size:18px;margin:0}
-.badge{display:inline-block;font-size:12px;color:#0b0d12;background:var(--accent);padding:2px 8px;border-radius:999px;font-weight:700;letter-spacing:.02em}
-.sidebar{display:flex;flex-direction:column;gap:16px}
-.sidebar .mini{background:var(--panel);border:1px solid var(--divider);border-radius:10px;padding:12px}
-.sidebar h4{margin:0 0 10px 0;font-size:14px;text-transform:uppercase;color:var(--muted);letter-spacing:.02em}
-.sidebar .mini .row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--divider);font-size:14px}
-.sidebar .mini .row:last-child{border-bottom:none}
 .empty{grid-column:1/-1;border:1px dashed var(--divider);border-radius:10px;padding:14px;background:var(--panel-2);color:var(--muted)}
+.kicker{margin:6px 0 0 0;color:var(--muted);font-size:12px}
 footer{margin:24px 0 8px 0;color:var(--muted);font-size:12px;text-align:center}
+.sep{height:1px;background:var(--divider);margin:16px 0}
 @media (max-width:980px){ .grid{grid-template-columns:1fr;gap:12px} .leaders{grid-template-columns:1fr} .subnav{flex-wrap:wrap} }
