@@ -1,0 +1,50 @@
+[
+  {
+    "id": "FEN",
+    "name": "Fenerbache",
+    "city": "Istanbul",
+    "abbr": "FEN",
+    "primary_color": "#0C2340",
+    "secondary_color": "#FFC72C"
+  },
+  {
+    "id": "ASU",
+    "name": "Asura",
+    "city": "—",
+    "abbr": "ASU",
+    "primary_color": "#7E2F8E",
+    "secondary_color": "#111111"
+  },
+  {
+    "id": "VIT",
+    "name": "Vitoria",
+    "city": "—",
+    "abbr": "VIT",
+    "primary_color": "#1E3A8A",
+    "secondary_color": "#F59E0B"
+  },
+  {
+    "id": "PAR",
+    "name": "Partizan",
+    "city": "—",
+    "abbr": "PAR",
+    "primary_color": "#000000",
+    "secondary_color": "#FFFFFF"
+  },
+  {
+    "id": "ZES",
+    "name": "Zest",
+    "city": "—",
+    "abbr": "ZES",
+    "primary_color": "#22C55E",
+    "secondary_color": "#0F172A"
+  },
+  {
+    "id": "GIR",
+    "name": "Basquet Girona",
+    "city": "Girona",
+    "abbr": "GIR",
+    "primary_color": "#D90429",
+    "secondary_color": "#111111"
+  }
+]

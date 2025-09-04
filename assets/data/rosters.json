@@ -1,0 +1,140 @@
+{
+  "FEN": [
+    {
+      "id": "FEN-01",
+      "team_id": "FEN",
+      "first_name": "Mert",
+      "last_name": "Kaya",
+      "position": "G"
+    },
+    {
+      "id": "FEN-02",
+      "team_id": "FEN",
+      "first_name": "Emre",
+      "last_name": "Yildiz",
+      "position": "F"
+    },
+    {
+      "id": "FEN-03",
+      "team_id": "FEN",
+      "first_name": "Burak",
+      "last_name": "Demir",
+      "position": "C"
+    }
+  ],
+  "ASU": [
+    {
+      "id": "ASU-01",
+      "team_id": "ASU",
+      "first_name": "Ayo",
+      "last_name": "Kade",
+      "position": "G"
+    },
+    {
+      "id": "ASU-02",
+      "team_id": "ASU",
+      "first_name": "Remy",
+      "last_name": "Sol",
+      "position": "F"
+    },
+    {
+      "id": "ASU-03",
+      "team_id": "ASU",
+      "first_name": "Kian",
+      "last_name": "Vale",
+      "position": "C"
+    }
+  ],
+  "VIT": [
+    {
+      "id": "VIT-01",
+      "team_id": "VIT",
+      "first_name": "Leo",
+      "last_name": "Costa",
+      "position": "G"
+    },
+    {
+      "id": "VIT-02",
+      "team_id": "VIT",
+      "first_name": "Nico",
+      "last_name": "Vaz",
+      "position": "F"
+    },
+    {
+      "id": "VIT-03",
+      "team_id": "VIT",
+      "first_name": "Iker",
+      "last_name": "Ibai",
+      "position": "C"
+    }
+  ],
+  "PAR": [
+    {
+      "id": "PAR-01",
+      "team_id": "PAR",
+      "first_name": "Milan",
+      "last_name": "Stojan",
+      "position": "G"
+    },
+    {
+      "id": "PAR-02",
+      "team_id": "PAR",
+      "first_name": "Vuk",
+      "last_name": "Radic",
+      "position": "F"
+    },
+    {
+      "id": "PAR-03",
+      "team_id": "PAR",
+      "first_name": "Zoran",
+      "last_name": "Matic",
+      "position": "C"
+    }
+  ],
+  "ZES": [
+    {
+      "id": "ZES-01",
+      "team_id": "ZES",
+      "first_name": "Zee",
+      "last_name": "Ray",
+      "position": "G"
+    },
+    {
+      "id": "ZES-02",
+      "team_id": "ZES",
+      "first_name": "Aris",
+      "last_name": "Tao",
+      "position": "F"
+    },
+    {
+      "id": "ZES-03",
+      "team_id": "ZES",
+      "first_name": "Noah",
+      "last_name": "Kane",
+      "position": "C"
+    }
+  ],
+  "GIR": [
+    {
+      "id": "GIR-01",
+      "team_id": "GIR",
+      "first_name": "Pau",
+      "last_name": "Ribas",
+      "position": "G"
+    },
+    {
+      "id": "GIR-02",
+      "team_id": "GIR",
+      "first_name": "Marc",
+      "last_name": "Prat",
+      "position": "F"
+    },
+    {
+      "id": "GIR-03",
+      "team_id": "GIR",
+      "first_name": "Arnau",
+      "last_name": "Solé",
+      "position": "C"
+    }
+  ]
+}

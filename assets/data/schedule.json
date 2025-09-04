@@ -1,0 +1,29 @@
+[
+  {
+    "game_id": "001",
+    "date": "2025-09-04",
+    "home": "FEN",
+    "away": "ASU",
+    "home_score": 72,
+    "away_score": 68,
+    "status": "Final"
+  },
+  {
+    "game_id": "002",
+    "date": "2025-09-04",
+    "home": "VIT",
+    "away": "PAR",
+    "home_score": 65,
+    "away_score": 71,
+    "status": "Final"
+  },
+  {
+    "game_id": "003",
+    "date": "2025-09-04",
+    "home": "ZES",
+    "away": "GIR",
+    "home_score": 75,
+    "away_score": 77,
+    "status": "Final"
+  }
+]
