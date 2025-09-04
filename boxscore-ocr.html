@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Boxscore OCR · Euro2KLeague</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body{background:#0b1830;color:#fff;font-family:Inter,system-ui,Arial,sans-serif;margin:0}
+    .wrap{width:min(1100px,92%);margin:0 auto;padding:20px}
+    h1{font-family:'Barlow Condensed',Inter,sans-serif;text-transform:uppercase;margin:8px 0 12px}
+    .card{background:#102341;border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:16px;margin:14px 0}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:700;border:1px solid rgba(255,255,255,.12);color:#fff}
+    .btn.primary{background:linear-gradient(90deg,#c21f2b,#8e1822);border:none}
+    .btn.secondary{background:linear-gradient(90deg,#b99343,#8a6a2f);border:none}
+    .btn.ghost{background:transparent}
+    .input,select,textarea{width:100%;background:#0f1e38;border:1px solid rgba(255,255,255,.12);color:#fff;padding:8px;border-radius:8px}
+    textarea{min-height:200px}
+    .drop{border:1px dashed rgba(255,255,255,.18);padding:14px;border-radius:12px;text-align:center}
+    table{width:100%;border-collapse:collapse}
+    th,td{border-bottom:1px solid rgba(255,255,255,.12);padding:8px;text-align:left}
+    th{background:rgba(255,255,255,.06)}
+    .toolbar{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@v5/dist/tesseract.min.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Boxscore OCR (Hidden Tool)</h1>
+    <p class="muted">Use this once to extract your screenshot into CSV and produce updated data files. This page is not linked in the menu.</p>
+
+    <div class="card">
+      <div class="grid">
+        <div>
+          <h3>1) Upload your boxscore image</h3>
+          <div class="drop"><input id="imageFile" type="file" accept="image/*"></div>
+          <div id="imgPreview" style="display:none;margin:8px 0;text-align:center">
+            <img id="previewImg" alt="preview" style="max-width:100%;border-radius:12px;border:1px solid rgba(255,255,255,.12)"/>
+          </div>
+          <div class="toolbar">
+            <button id="ocrBtn" class="btn ghost">Extract text (OCR)</button>
+            <button id="autoCsvBtn" class="btn ghost">Auto-format to CSV</button>
+          </div>
+          <textarea id="csvPaste" placeholder="OCR result appears here — then click Auto-format to CSV"></textarea>
+          <div class="toolbar"><button id="parseBtn" class="btn secondary">Parse</button></div>
+        </div>
+        <div>
+          <h3>2) Game meta</h3>
+          <label>Home Team<br><input id="homeTeam" class="input" placeholder="e.g., LON"></label>
+          <label style="margin-top:8px">Away Team<br><input id="awayTeam" class="input" placeholder="e.g., PAR"></label>
+          <div class="grid" style="margin-top:8px">
+            <label>Home Score<br><input id="homeScore" class="input" type="number" min="0"></label>
+            <label>Away Score<br><input id="awayScore" class="input" type="number" min="0"></label>
+          </div>
+          <label style="margin-top:8px">Game Date<br><input id="gameDate" class="input" type="date"></label>
+        </div>
+      </div>
+    </div>
+
+    <div id="mapping" class="card" hidden>
+      <h3>3) Map columns</h3>
+      <div id="mapGrid"></div>
+    </div>
+
+    <div id="preview" class="card" hidden>
+      <h3>4) Preview parsed rows</h3>
+      <div id="tableWrap"></div>
+      <div class="toolbar"><button id="mergeBtn" class="btn primary">Merge to Totals</button></div>
+    </div>
+
+    <div id="results" class="card" hidden>
+      <h3>5) Download updated data</h3>
+      <div class="toolbar" style="gap:10px;justify-content:flex-start">
+        <a id="dlPlayers" class="btn secondary" download="players.json">Download players.json</a>
+        <a id="dlStandings" class="btn secondary" download="standings.json">Download standings.json</a>
+        <a id="dlCsv" class="btn ghost" download="players_totals.csv">Download totals CSV</a>
+      </div>
+    </div>
+  </div>
+
+<script>
+const required = ["team","name","min","pts","reb","ast","stl","blk","tov","fgm","fga","tpm","tpa","ftm","fta","pf","plusminus"];
+
+function parseCSV(text){
+  const lines = text.trim().split(/\r?\n/).filter(Boolean);
+  const headers = lines[0].split(',').map(h=>h.trim());
+  const rows = lines.slice(1).map(line=>{
+    const cells = line.split(',').map(c=>c.trim());
+    const o={}; headers.forEach((h,i)=> o[h]=cells[i] ?? ""); return o;
+  });
+  return {headers, rows};
+}
+function buildMapping(headers){
+  const container = document.getElementById('mapGrid'); container.innerHTML='';
+  headers.forEach((h,i)=>{
+    const row = document.createElement('div'); row.style.margin='6px 0';
+    const sel = document.createElement('select'); sel.className='input';
+    required.forEach(req=>{
+      const opt = document.createElement('option'); opt.value=req; opt.textContent=req;
+      if(req.toLowerCase()===h.toLowerCase()) opt.selected=true;
+      sel.appendChild(opt);
+    });
+    row.innerHTML = `<label><strong>${h}</strong></label>`;
+    row.appendChild(sel);
+    container.appendChild(row);
+  });
+}
+function coerceNumber(v){ const n=Number(v); return isFinite(n)?n:0; }
+function mapRows(headers, rows){
+  const selects = Array.from(document.querySelectorAll('#mapGrid select'));
+  const mapping = selects.map((s,i)=>({from:headers[i], to:s.value}));
+  return rows.map(r=>{
+    const o={};
+    mapping.forEach(m=> o[m.to] = r[m.from]);
+    for(const k of required){ if(k!=="team" && k!=="name") o[k] = coerceNumber(o[k]); }
+    return o;
+  });
+}
+function renderTable(rows){
+  const wrap = document.getElementById('tableWrap');
+  const cols = required;
+  const th = '<tr>'+cols.map(c=>`<th>${c}</th>`).join('')+'</tr>';
+  const body = rows.map(r=>'<tr>'+cols.map(c=>`<td>${r[c]??""}</td>`).join('')+'</tr>').join('');
+  wrap.innerHTML = `<div class="table responsive"><table>${th}${body}</table></div>`;
+}
+async function fetchJSON(path){ const r = await fetch(path); return r.json(); }
+function toBlobUrl(obj){ const blob = new Blob([JSON.stringify(obj, null, 2)], {type:'application/json'}); return URL.createObjectURL(blob); }
+function toCsvBlobUrl(rows){
+  if(!rows.length) return '';
+  const headers = Object.keys(rows[0]); const lines = [headers.join(',')];
+  rows.forEach(r => lines.push(headers.map(h=> r[h]??"").join(',')));
+  const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+  return URL.createObjectURL(blob);
+}
+function autoCSVFromText(raw){
+  const lines = raw.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+  const tokenized = lines.map(l => l.split(/,|\t|\s{2,}/).filter(Boolean));
+  const useful = tokenized.filter(t => t.length >= 4);
+  if(!useful.length) return '';
+  const headers = ["team","name","min","pts","reb","ast","stl","blk","tov","fgm","fga","tpm","tpa","ftm","fta","pf","plusminus"];
+  const csvLines = [headers.join(',')];
+  useful.forEach(r => csvLines.push(r.join(',')));
+  return csvLines.join('\n');
+}
+
+// OCR UI
+const imgInput = document.getElementById('imageFile');
+const ocrBtn = document.getElementById('ocrBtn');
+const autoCsvBtn = document.getElementById('autoCsvBtn');
+const csvPaste = document.getElementById('csvPaste');
+const imgPreviewWrap = document.getElementById('imgPreview');
+const previewImg = document.getElementById('previewImg');
+
+imgInput.addEventListener('change', ()=>{
+  if(imgInput.files[0]){
+    const url = URL.createObjectURL(imgInput.files[0]);
+    previewImg.src = url;
+    imgPreviewWrap.style.display = 'block';
+  }
+});
+ocrBtn.addEventListener('click', async ()=>{
+  if(!imgInput.files[0]){ alert('Choose a PNG/JPG first.'); return; }
+  ocrBtn.textContent = 'Extracting...'; ocrBtn.disabled = true;
+  try{
+    const { data:{ text } } = await Tesseract.recognize(imgInput.files[0], 'eng', { logger: m => { if(m.progress){ ocrBtn.textContent = 'Extracting... ' + Math.round(m.progress*100)+'%'; } } });
+    csvPaste.value = text.trim();
+    ocrBtn.textContent = 'Extract text (OCR)';
+  }catch(e){
+    alert('OCR failed: ' + e.message);
+    ocrBtn.textContent = 'Extract text (OCR)';
+  }finally{
+    ocrBtn.disabled = false;
+  }
+});
+autoCsvBtn.addEventListener('click', ()=>{
+  if(!csvPaste.value.trim()){ alert('Run OCR or paste text first.'); return; }
+  const csv = autoCSVFromText(csvPaste.value);
+  if(!csv){ alert('Could not auto-convert. Tweak the text and try again.'); return; }
+  csvPaste.value = csv;
+});
+
+// Parse -> Map -> Preview
+document.getElementById('parseBtn').addEventListener('click', async ()=>{
+  let text = csvPaste.value.trim();
+  if(!text){ alert('Paste CSV or run OCR first.'); return; }
+  const {headers, rows} = parseCSV(text);
+  document.getElementById('mapping').hidden = false;
+  buildMapping(headers);
+  const mapped = mapRows(headers, rows);
+  window._mapped = mapped;
+  document.getElementById('preview').hidden = false;
+  renderTable(mapped);
+});
+
+// Merge to totals and offer downloads
+document.getElementById('mergeBtn').addEventListener('click', async ()=>{
+  const parsed = window._mapped || [];
+  if(!parsed.length){ alert('Parse data first.'); return; }
+  const players = await fetchJSON('assets/data/players.json').catch(()=>[]);
+  const standings = await fetchJSON('assets/data/standings.json').catch(()=>[]);
+
+  const key = p => `${p.name}__${p.team}`.toLowerCase();
+  const idx = Object.fromEntries(players.map(p=>[key(p), p]));
+  parsed.forEach(g=>{
+    const k = key(g);
+    if(!idx[k]){
+      idx[k] = {id: Date.now()+Math.random(), name:g.name, team:g.team, pos:'', gp:0, mins:0, pts:0, reb:0, ast:0, stl:0, blk:0, tov:0, fgm:0, fga:0, tpm:0, tpa:0, ftm:0, fta:0, pf:0, plusminus:0};
+      players.push(idx[k]);
+    }
+    const p = idx[k];
+    p.gp += 1; p.mins += g.min; p.pts += g.pts; p.reb += g.reb; p.ast += g.ast; p.stl += g.stl; p.blk += g.blk;
+    p.tov += g.tov; p.fgm += g.fgm; p.fga += g.fga; p.tpm += g.tpm; p.tpa += g.tpa; p.ftm += g.ftm; p.fta += g.fta;
+    p.pf += g.pf; p.plusminus += g.plusminus;
+  });
+
+  const home = document.getElementById('homeTeam').value.trim().toUpperCase();
+  const away = document.getElementById('awayTeam').value.trim().toUpperCase();
+  const hs = Number(document.getElementById('homeScore').value||0);
+  const as = Number(document.getElementById('awayScore').value||0);
+  function ensureTeam(t){
+    let row = standings.find(s=>s.team===t);
+    if(!row){ row = {team:t, wins:0, losses:0, pf:0, pa:0}; standings.push(row); }
+    return row;
+  }
+  if(home && away){
+    const H = ensureTeam(home), A = ensureTeam(away);
+    H.pf += hs; H.pa += as; A.pf += as; A.pa += hs;
+    if(hs>as){ H.wins+=1; A.losses+=1; } else if(as>hs){ A.wins+=1; H.losses+=1; }
+  }
+
+  document.getElementById('dlPlayers').href = toBlobUrl(players);
+  document.getElementById('dlStandings').href = toBlobUrl(standings);
+  document.getElementById('dlCsv').href = toCsvBlobUrl(players);
+  document.getElementById('results').hidden = false;
+  window.scrollTo({top: document.body.scrollHeight, behavior:'smooth'});
+});
+</script>
+</body>
+</html>
