@@ -1,33 +1,14 @@
-<!doctype html><html lang="en"><head>
+<!doctype html><html><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Standings · Euro2KLeague</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mini.css"></head>
-<body>
-<main class="container" style="padding:22px 0">
-  <h1>Standings</h1>
-  <p class="muted">Live table updated as results come in.</p>
-  <div class="card" style="margin-top:12px">
-    <div class="table responsive">
-      <table id="tbl"><thead><tr><th>Team</th><th>W</th><th>L</th><th>PF</th><th>PA</th><th>Diff</th></tr></thead><tbody></tbody></table>
-    </div>
-  </div>
-</main>
+<title>Standings</title><link rel="stylesheet" href="mini.css">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head><body><main class="container" style="padding:22px 0">
+<h1>Standings</h1><div class="card"><div class="table responsive">
+<table id="tbl"><thead><tr><th>Team</th><th>W</th><th>L</th><th>PF</th><th>PA</th><th>Diff</th></tr></thead><tbody></tbody></table>
+</div></div></main>
 <script>
-async function safeJson(url){
-  try{ const r = await fetch(url, {cache:'no-store'}); if(!r.ok) throw new Error(r.status); return await r.json(); }
-  catch(e){ console.error('Failed to load', url, e); return []; }
-}
-(async function(){
-  const rows = await safeJson('assets/data/standings.json');
-  const body = document.querySelector('#tbl tbody');
-  if(!rows.length){ body.innerHTML = '<tr><td colspan=6 style="padding:16px;color:#a8b4d8">No data (check assets/data/standings.json)</td></tr>'; return; }
-  rows.forEach(r => {
-    const d = (r.pf||0)-(r.pa||0);
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${r.team}</td><td>${r.wins||0}</td><td>${r.losses||0}</td><td>${r.pf||0}</td><td>${r.pa||0}</td><td>${d>0?'+':''}${d}</td>`;
-    body.appendChild(tr);
-  });
-})();
-</script>
-</body></html>
+async function get(u){try{const r=await fetch(u,{cache:'no-store'});if(!r.ok)throw new Error(r.status);return await r.json()}catch(e){console.error(e);return[]}}
+(async()=>{const rows=await get('assets/data/standings.json');const b=document.querySelector('#tbl tbody');
+if(!rows.length){b.innerHTML='<tr><td colspan=6 style="padding:16px;color:#a8b4d8">No data at assets/data/standings.json</td></tr>';return;}
+rows.forEach(r=>{const d=(r.pf||0)-(r.pa||0);const tr=document.createElement('tr');tr.innerHTML=`<td>${r.team}</td><td>${r.wins||0}</td><td>${r.losses||0}</td><td>${r.pf||0}</td><td>${r.pa||0}</td><td>${d>0?'+':''}${d}</td>`;b.appendChild(tr);});})();
+</script></body></html>
