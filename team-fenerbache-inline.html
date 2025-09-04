@@ -1,0 +1,76 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fenerbache · Euro2KLeague</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mini.css">
+<style>.hero{background:linear-gradient(90deg,#041E42,#FEDD00);padding:18px 0;margin-bottom:12px;border-bottom:1px solid var(--border)}</style>
+</head><body>
+<main class="container" style="padding:12px 0 28px">
+  <section class="card" style="padding:14px"><h1 style="margin:0 0 6px">Fenerbache Official</h1><p class="muted" style="margin:0">Team roster and season stats (auto-synced from site data).</p></section>
+  <section class="card" style="margin-top:14px">
+    <h2 style="padding:12px 16px;margin:0;border-bottom:1px solid var(--border)">Roster & Averages</h2>
+    <div class="table responsive"><table id="roster"><thead><tr><th>Player</th><th>GP</th><th>PPG</th><th>RPG</th><th>APG</th><th>SPG</th><th>BPG</th><th>FG%</th><th>3P%</th></tr></thead><tbody></tbody></table></div>
+  </section>
+  <section class="card" style="margin-top:14px">
+    <h2 style="padding:12px 16px;margin:0;border-bottom:1px solid var(--border)">Fenerbache Dashboard</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;padding:14px">
+      <div class="card" style="padding:14px"><div class="muted">Record</div><div id="rec" style="font-size:28px;font-weight:800">—</div><div id="form" class="muted" style="margin-top:6px">Form: —</div></div>
+      <div class="card" style="padding:14px"><div class="muted">Points For / Against</div><div id="pfpa" style="font-size:28px;font-weight:800">—</div><div id="diff" class="muted" style="margin-top:6px">Diff: —</div></div>
+      <div class="card" style="padding:14px"><div class="muted">Last Result</div><div id="last" style="font-size:18px;font-weight:700;line-height:1.35">—</div></div>
+    </div>
+  </section>
+  <section class="card" style="margin-top:14px">
+    <h2 style="padding:12px 16px;margin:0;border-bottom:1px solid var(--border)">Schedule</h2>
+    <div class="table responsive"><table id="sched"><thead><tr><th>Date</th><th>Opponent</th><th>Result</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+  </section>
+</main>
+<script id="playersInline" type="application/json">[{"id": 1, "name": "IE9RENI", "team": "Fenerbache", "gp": 1, "mins": 0, "pts": 24, "reb": 1, "ast": 8, "stl": 2, "blk": 0, "tov": 1, "fgm": 9, "fga": 14, "tpm": 4, "tpa": 7, "ftm": 0, "fta": 0, "pf": 0}, {"id": 2, "name": "CanBoym", "team": "Fenerbache", "gp": 1, "mins": 0, "pts": 26, "reb": 0, "ast": 7, "stl": 0, "blk": 0, "tov": 0, "fgm": 10, "fga": 13, "tpm": 4, "tpa": 6, "ftm": 0, "fta": 0, "pf": 3}, {"id": 3, "name": "LOVEBattleDeaD", "team": "Fenerbache", "gp": 1, "mins": 0, "pts": 6, "reb": 4, "ast": 2, "stl": 2, "blk": 1, "tov": 2, "fgm": 2, "fga": 4, "tpm": 2, "tpa": 3, "ftm": 0, "fta": 0, "pf": 3}, {"id": 4, "name": "Sabri_2K", "team": "Fenerbache", "gp": 1, "mins": 0, "pts": 3, "reb": 3, "ast": 2, "stl": 0, "blk": 2, "tov": 0, "fgm": 1, "fga": 2, "tpm": 1, "tpa": 2, "ftm": 0, "fta": 0, "pf": 0}, {"id": 5, "name": "KadoTheProblem_", "team": "Fenerbache", "gp": 1, "mins": 0, "pts": 16, "reb": 6, "ast": 0, "stl": 0, "blk": 1, "tov": 0, "fgm": 8, "fga": 8, "tpm": 0, "tpa": 0, "ftm": 0, "fta": 0, "pf": 2}, {"id": 6, "name": "PTCreative", "team": "Asura", "gp": 1, "mins": 0, "pts": 30, "reb": 2, "ast": 4, "stl": 0, "blk": 0, "tov": 1, "fgm": 11, "fga": 19, "tpm": 7, "tpa": 10, "ftm": 0, "fta": 0, "pf": 0}, {"id": 7, "name": "itsMomow", "team": "Asura", "gp": 1, "mins": 0, "pts": 17, "reb": 0, "ast": 1, "stl": 2, "blk": 0, "tov": 1, "fgm": 6, "fga": 9, "tpm": 5, "tpa": 7, "ftm": 0, "fta": 0, "pf": 1}, {"id": 8, "name": "v-Choper", "team": "Asura", "gp": 1, "mins": 0, "pts": 9, "reb": 2, "ast": 2, "stl": 1, "blk": 0, "tov": 0, "fgm": 4, "fga": 5, "tpm": 1, "tpa": 1, "ftm": 0, "fta": 0, "pf": 3}, {"id": 9, "name": "ItsHarisco", "team": "Asura", "gp": 1, "mins": 0, "pts": 6, "reb": 2, "ast": 0, "stl": 0, "blk": 0, "tov": 2, "fgm": 2, "fga": 5, "tpm": 2, "tpa": 5, "ftm": 0, "fta": 0, "pf": 2}, {"id": 10, "name": "v_Tchek", "team": "Asura", "gp": 1, "mins": 0, "pts": 6, "reb": 8, "ast": 4, "stl": 0, "blk": 1, "tov": 0, "fgm": 2, "fga": 6, "tpm": 0, "tpa": 1, "ftm": 0, "fta": 0, "pf": 1}]</script>
+<script id="standingsInline" type="application/json">[{"team": "Fenerbache", "wins": 1, "losses": 0, "pf": 75, "pa": 68}, {"team": "Asura", "wins": 0, "losses": 1, "pf": 68, "pa": 75}]</script>
+<script id="gamesInline" type="application/json">[{"id": "fb-asu-001", "date": "TBA", "home": "Fenerbache", "away": "Asura", "homeScore": 75, "awayScore": 68, "status": "final"}]</script>
+<script>
+const TEAM = 'Fenerbache';
+async function j(url, id){
+  try{ const r = await fetch(url, {cache:'no-store'}); if(!r.ok) throw new Error(); return await r.json(); }
+  catch(e){ return JSON.parse(document.getElementById(id).textContent); }
+}
+function pct(m,a){ return a? ((m/a)*100).toFixed(1)+'%' : '—'; }
+function per(n,g){ return g? (n/g).toFixed(1) : '0.0'; }
+(async function(){
+  const [players, standings, games] = await Promise.all([
+    j('assets/data/players.json','playersInline'),
+    j('assets/data/standings.json','standingsInline'),
+    j('assets/data/games.json','gamesInline')
+  ]);
+
+  const rows = players.filter(p => (p.team||'').toLowerCase()===TEAM.toLowerCase());
+  const body = document.querySelector('#roster tbody');
+  if(!rows.length){ body.innerHTML = '<tr><td colspan=9 style="padding:16px;color:#a8b4d8">No players yet for this team.</td></tr>'; }
+  rows.forEach(p => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${p.name}</td>
+      <td>${p.gp||0}</td><td>${per(p.pts||0,p.gp||1)}</td><td>${per(p.reb||0,p.gp||1)}</td><td>${per(p.ast||0,p.gp||1)}</td>
+      <td>${per(p.stl||0,p.gp||1)}</td><td>${per(p.blk||0,p.gp||1)}</td><td>${pct(p.fgm||0,p.fga||0)}</td><td>${pct(p.tpm||0,p.tpa||0)}</td>`;
+    body.appendChild(tr);
+  });
+
+  const s = standings.find(x => (x.team||'').toLowerCase()===TEAM.toLowerCase()) || {wins:0,losses:0,pf:0,pa:0};
+  document.getElementById('rec').textContent = `${s.wins}–${s.losses}`;
+  document.getElementById('pfpa').textContent = `${s.pf} / ${s.pa}`;
+  const d = (s.pf - s.pa); document.getElementById('diff').textContent = `Diff: ${d>0?'+':''}${d}`;
+
+  const finals = games.filter(g => g.status==='final' && (g.home===TEAM || g.away===TEAM)).slice().reverse();
+  if(finals[0]){
+    const g = finals[0]; const opp = g.home===TEAM?g.away:g.home;
+    const hs = g.home===TEAM?g.homeScore:g.awayScore; const as = g.home===TEAM?g.awayScore:g.homeScore;
+    const outcome = hs>as?'W':(hs<as?'L':'T'); document.getElementById('last').innerHTML = `<strong>${outcome}</strong> vs ${opp} — ${hs}–${as} (${g.date||'TBA'})`;
+  }
+
+  const body2 = document.querySelector('#sched tbody'); body2.innerHTML='';
+  games.filter(g => g.home===TEAM || g.away===TEAM).forEach(g => {
+    const opp = g.home===TEAM ? g.away : g.home;
+    const res = g.status==='final' ? `${g.home===TEAM?g.homeScore:g.awayScore}–${g.home===TEAM?g.awayScore:g.homeScore}` : '—';
+    const tr = document.createElement('tr'); tr.innerHTML = `<td>${g.date||'TBA'}</td><td>${opp}</td><td>${res}</td><td>${g.status}</td>`; body2.appendChild(tr);
+  });
+})();
+</script>
+</body></html>
