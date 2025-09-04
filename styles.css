@@ -80,3 +80,25 @@
 .side-menu a:hover{background:rgba(255,255,255,.08)}
 .menu-mask{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(1px);z-index:1500;display:none}
 .menu-mask.show{display:block}
+
+
+/* --- v20 Desktop fix: keep hero text below centered ring, unify sidebar look --- */
+@media (min-width: 1025px){
+  .hero{ min-height: 90vh; }
+  .hero-art{
+    background-position: top center !important;
+    background-size: min(68vh, 900px) !important;
+  }
+  .hero-copy{
+    padding-top: clamp(360px, 58vh, 520px) !important;
+    margin-inline: auto;
+    text-align: center;
+  }
+  .cta-row{ justify-content: center; }
+}
+/* Sidebar consistency on desktop */
+.nav-toggle{ display:none !important; } /* remove secondary hamburger */
+.side-menu{ width:min(420px, 40vw); }
+.side-menu a{ font-size:16px; }
+.menu-mask{ background:rgba(0,0,0,.55); }
+
