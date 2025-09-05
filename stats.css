@@ -1,6 +1,7 @@
 
-:root{ --bg:#0b0d12; --panel:#11151c; --panel-2:#161b22; --text:#e7ecf3; --muted:#a6b3c2; --accent:#ffd166; --divider:#202734; --red:#ef4444; --green:#22c55e; }
-*{box-sizing:border-box} html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial}
+:root{ --bg:#0b0d12; --panel:#11151c; --panel-2:#161b22; --text:#e7ecf3; --muted:#a6b3c2; --accent:#ffd166; --divider:#202734; }
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial}
 a{color:#69a7ff;text-decoration:none} a:hover{text-decoration:underline}
 .wrapper{max-width:1200px;margin:0 auto;padding:16px}
 .header{display:flex;align-items:center;gap:12px;padding:8px 0 16px;border-bottom:1px solid var(--divider);margin-bottom:16px}
@@ -25,5 +26,4 @@ a{color:#69a7ff;text-decoration:none} a:hover{text-decoration:underline}
 .kicker{margin:6px 0 0 0;color:var(--muted);font-size:12px}
 footer{margin:24px 0 8px 0;color:var(--muted);font-size:12px;text-align:center}
 .debug{background:#0f172a;border:1px solid #334155;color:#cbd5e1;padding:10px;border-radius:8px;font-size:12px;margin:10px 0}
-.debug .ok{color:var(--green)} .debug .err{color:var(--red)}
 @media (max-width:980px){ .grid{grid-template-columns:1fr;gap:12px} .leaders{grid-template-columns:1fr} .subnav{flex-wrap:wrap} }

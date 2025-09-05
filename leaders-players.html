@@ -1,27 +1,81 @@
 
-<!doctype html><html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Euro2KLeague — Player Leaders</title>
-<link rel="stylesheet" href="stats.css">
-</head><body>
-<div class="wrapper">
-  <div class="header">
-    <div class="logo">E2K</div><h1>Stats</h1>
-    <div class="subnav">
-      <a class="active" href="leaders-players.html">Player Leaders</a>
-      <a href="leaders-teams.html">Team Leaders</a>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Euro2KLeague — Player Leaders</title>
+  <link rel="stylesheet" href="stats.css">
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <div class="logo">E2K</div><h1>Stats</h1>
+      <div class="subnav">
+        <a class="active" href="leaders-players.html">Player Leaders</a>
+        <a href="leaders-teams.html">Team Leaders</a>
+      </div>
     </div>
+    <div id="debug" class="debug" style="display:none"></div>
+    <div class="section-title"><h2>Game Leaders</h2><span class="badge">BETA</span></div>
+    <div class="grid">
+      <div class="leaders" id="player-leaders"></div>
+      <aside class="sidebar" id="sidebar-right"></aside>
+    </div>
+    <footer>Euro2KLeague — stats layout pack • Generated 2025-09-05</footer>
   </div>
+  <script>
+(() => {
+  const DATA_PATHS = ['/Euro2KL/assets/data/boxscore.json', 'assets/data/boxscore.json', '/assets/data/boxscore.json'];
+  const wrapper = document.querySelector('.wrapper');
+  function debug(msg){ const d=document.querySelector('#debug')||(()=>{const div=document.createElement('div');div.id='debug';div.className='debug';wrapper.prepend(div);return div;})(); d.innerHTML += `<div>${msg}</div>`; }
+  function renderEmpty(where, msg, det){ const div=document.createElement('div');div.className='empty';div.innerHTML = `<strong>${msg}</strong>${det?`<div class="kicker">${det}</div>`:''}`; where.appendChild(div); }
+  function renderCard(where, title, rows){ const card=document.createElement('div'); card.className='card'; card.innerHTML=`<h3>${title}</h3><table class="table"><tbody></tbody></table>`; const tb=card.querySelector('tbody'); rows.forEach((r,i)=>{ const tr=document.createElement('tr'); tr.innerHTML = `<td class="rank">${i+1}.</td><td>${r.name}</td><td style="text-align:right;font-variant-numeric:tabular-nums">${r.val}</td>`; tb.appendChild(tr); }); where.appendChild(card); }
+  const by = k => (a,b)=> (b[k]??0) - (a[k]??0);
+  const round = (x,d=1)=> Number.parseFloat(x??0).toFixed(d);
+  function nameOf(p){ return p.gamertag || p.name || p.playerName || p.fullName || '—'; }
 
-  <div class="section-title">
-    <h2>Game Leaders</h2><span class="badge">BETA</span>
-  </div>
-  <div class="grid">
-    <div class="leaders" id="player-leaders"></div>
-    <aside class="sidebar" id="sidebar-right"></aside>
-  </div>
+  async function loadBox(){
+    const tried=[];
+    for(const url of DATA_PATHS){
+      try{
+        const r = await fetch(url, {cache:'no-store'});
+        tried.push(`${url} → ${r.status}`);
+        if(r.ok) { debug(`Loaded ${url}`); return await r.json(); }
+      }catch(e){ tried.push(`${url} → ${e.message}`); }
+    }
+    throw new Error('Failed to load boxscore.json\n'+tried.join('\n'));
+  }
 
-  <footer>Euro2KLeague — stats layout pack • Generated 2025-09-05</footer>
-</div>
-<script src="stats.js"></script>
-</body></html>
+  async function run(){
+    const host = document.querySelector('#player-leaders');
+    let data;
+    try{ data = await loadBox(); }catch(e){ renderEmpty(host, 'Couldn’t load boxscore.json', e.message.replaceAll('\n','<br>')); return; }
+    const game = data.game || data;
+    const home = game.home || {}; const away = game.away || {};
+    const players = [].concat(home.players||[], away.players||[]);
+    if(!players.length){ renderEmpty(host, 'No player lines under home.players / away.players.'); return; }
+
+    const cats = [
+      ['POINTS','pts',0],
+      ['REBOUNDS','reb',0],
+      ['ASSISTS','ast',0],
+      ['STEALS','stl',0],
+      ['BLOCKS','blk',0],
+      ['FIELD GOAL %','fg_pct',1, p => (p.fga? (100*(p.fgm||0)/p.fga).toFixed(1)+'%':'—')],
+      ['3-PT MADE','tpm',0],
+      ['3-PT %','tp_pct',1, p => (p.tpa? (100*(p.tpm||0)/p.tpa).toFixed(1)+'%':'—')],
+      ['FREE THROW %','ft_pct',1, p => (p.fta? (100*(p.ftm||0)/p.fta).toFixed(1)+'%':'—')]
+    ];
+
+    for(const [label,key,dp,fmt] of cats){
+      const top = [...players].sort(by(key)).slice(0,5).map(p=>({ name: nameOf(p), val: fmt ? fmt(p) : round(p[key], dp) }));
+      renderCard(host, label, top);
+    }
+  }
+
+  run();
+})();
+</script>
+</body>
+</html>
