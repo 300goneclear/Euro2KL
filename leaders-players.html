@@ -1,81 +1,108 @@
-
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Euro2KLeague — Player Leaders</title>
-  <link rel="stylesheet" href="stats.css">
-</head>
-<body>
-  <div class="wrapper">
-    <div class="header">
-      <div class="logo">E2K</div><h1>Stats</h1>
-      <div class="subnav">
-        <a class="active" href="leaders-players.html">Player Leaders</a>
-        <a href="leaders-teams.html">Team Leaders</a>
-      </div>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Euro2KLeague — Player Leaders</title>
+<link rel="stylesheet" href="stats.css">
+</head><body>
+<div class="wrapper">
+  <div class="header">
+    <div class="logo">E2K</div><h1>Stats</h1>
+    <div class="subnav">
+      <a href="leaders-players.html">Player Leaders</a>
+      <a href="leaders-teams.html">Team Leaders</a>
+      <a href="schedule.html">Schedule</a>
+      <a href="standings.html">Standings</a>
     </div>
-    <div id="debug" class="debug" style="display:none"></div>
-    <div class="section-title"><h2>Game Leaders</h2><span class="badge">BETA</span></div>
-    <div class="grid">
-      <div class="leaders" id="player-leaders"></div>
-      <aside class="sidebar" id="sidebar-right"></aside>
-    </div>
-    <footer>Euro2KLeague — stats layout pack • Generated 2025-09-05</footer>
   </div>
-  <script>
-(() => {
-  const DATA_PATHS = ['/Euro2KL/assets/data/boxscore.json', 'assets/data/boxscore.json', '/assets/data/boxscore.json'];
-  const wrapper = document.querySelector('.wrapper');
-  function debug(msg){ const d=document.querySelector('#debug')||(()=>{const div=document.createElement('div');div.id='debug';div.className='debug';wrapper.prepend(div);return div;})(); d.innerHTML += `<div>${msg}</div>`; }
-  function renderEmpty(where, msg, det){ const div=document.createElement('div');div.className='empty';div.innerHTML = `<strong>${msg}</strong>${det?`<div class="kicker">${det}</div>`:''}`; where.appendChild(div); }
-  function renderCard(where, title, rows){ const card=document.createElement('div'); card.className='card'; card.innerHTML=`<h3>${title}</h3><table class="table"><tbody></tbody></table>`; const tb=card.querySelector('tbody'); rows.forEach((r,i)=>{ const tr=document.createElement('tr'); tr.innerHTML = `<td class="rank">${i+1}.</td><td>${r.name}</td><td style="text-align:right;font-variant-numeric:tabular-nums">${r.val}</td>`; tb.appendChild(tr); }); where.appendChild(card); }
-  const by = k => (a,b)=> (b[k]??0) - (a[k]??0);
-  const round = (x,d=1)=> Number.parseFloat(x??0).toFixed(d);
-  function nameOf(p){ return p.gamertag || p.name || p.playerName || p.fullName || '—'; }
+  <div class="section-title"><h2>Game Leaders</h2><span class="badge">AUTO</span></div><div class="grid"><div class="leaders" id="player-leaders"></div></div>
+  <footer>Euro2KLeague — auto boxscores • Generated 2025-09-05</footer>
+</div>
+<script>
+const CONFIG = {
+  owner: '300goneclear',
+  repo: '300goneclear.github.io',
+  branch: 'main',
+  dir: 'Euro2KL/assets/data/boxscores' // drop EVERY boxscore .json here
+};
+const LOCAL_BASES = ['/Euro2KL/assets/data','assets/data','/assets/data'];
+const RAW = (path)=> `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/${path}`;
+const GH_LIST = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.dir}?ref=${CONFIG.branch}`;
 
-  async function loadBox(){
-    const tried=[];
-    for(const url of DATA_PATHS){
-      try{
-        const r = await fetch(url, {cache:'no-store'});
-        tried.push(`${url} → ${r.status}`);
-        if(r.ok) { debug(`Loaded ${url}`); return await r.json(); }
-      }catch(e){ tried.push(`${url} → ${e.message}`); }
-    }
-    throw new Error('Failed to load boxscore.json\n'+tried.join('\n'));
+async function listBoxscores(){
+  try{
+    const res = await fetch(GH_LIST, {cache:'no-store'});
+    if(!res.ok) throw new Error('GitHub list failed '+res.status);
+    const files = await res.json();
+    const jsons = files.filter(f=>/\.json$/i.test(f.name)).map(f=>({ name:f.name, path:`${CONFIG.dir}/${f.name}` }));
+    if(jsons.length) return jsons;
+  }catch(e){ /* fall back below */ }
+  // fallback to local manifest or single file
+  for(const base of LOCAL_BASES){
+    try{ const g=await fetch(`${base}/games.json`,{cache:'no-store'}); if(g.ok){ const body=await g.json(); const arr=Array.isArray(body)?body:(body.games||[]); if(arr.length) return arr.map((game,i)=>({inline:game, name:`inline-${i}.json`})); } }catch(_){}
   }
-
-  async function run(){
-    const host = document.querySelector('#player-leaders');
-    let data;
-    try{ data = await loadBox(); }catch(e){ renderEmpty(host, 'Couldn’t load boxscore.json', e.message.replaceAll('\n','<br>')); return; }
-    const game = data.game || data;
-    const home = game.home || {}; const away = game.away || {};
-    const players = [].concat(home.players||[], away.players||[]);
-    if(!players.length){ renderEmpty(host, 'No player lines under home.players / away.players.'); return; }
-
-    const cats = [
-      ['POINTS','pts',0],
-      ['REBOUNDS','reb',0],
-      ['ASSISTS','ast',0],
-      ['STEALS','stl',0],
-      ['BLOCKS','blk',0],
-      ['FIELD GOAL %','fg_pct',1, p => (p.fga? (100*(p.fgm||0)/p.fga).toFixed(1)+'%':'—')],
-      ['3-PT MADE','tpm',0],
-      ['3-PT %','tp_pct',1, p => (p.tpa? (100*(p.tpm||0)/p.tpa).toFixed(1)+'%':'—')],
-      ['FREE THROW %','ft_pct',1, p => (p.fta? (100*(p.ftm||0)/p.fta).toFixed(1)+'%':'—')]
-    ];
-
-    for(const [label,key,dp,fmt] of cats){
-      const top = [...players].sort(by(key)).slice(0,5).map(p=>({ name: nameOf(p), val: fmt ? fmt(p) : round(p[key], dp) }));
-      renderCard(host, label, top);
-    }
+  for(const base of LOCAL_BASES){
+    try{ const b=await fetch(`${base}/boxscore.json`,{cache:'no-store'}); if(b.ok){ const game=await b.json(); return [{inline:(game.game||game), name:'boxscore.json'}]; } }catch(_){}
   }
+  return [];
+}
 
-  run();
+async function fetchGameRef(ref){
+  if(ref.inline) return ref.inline;
+  const url = RAW(ref.path);
+  const r = await fetch(url, {cache:'no-store'});
+  if(!r.ok) throw new Error('Fetch '+ref.name+' → '+r.status);
+  const body = await r.json();
+  return body.game || body;
+}
+
+function normGame(g){
+  const H = g.home||{}, A=g.away||{};
+  return {
+    id: String(g.game_id||g.id||`${H.name||'Home'}-${A.name||'Away'}-${g.date||''}`),
+    date: g.date || '',
+    home: { id:H.id||H.name||'HOME', name:H.name||H.team||H.id||'Home', score:Number(H.score||0), quarters:H.quarters||[], totals:H.totals||{}, players:H.players||[] },
+    away: { id:A.id||A.name||'AWAY', name:A.name||A.team||A.id||'Away', score:Number(A.score||0), quarters:A.quarters||[], totals:A.totals||{}, players:A.players||[] }
+  };
+}
+
+async function loadAllGames(){
+  const refs = await listBoxscores();
+  const games = [];
+  for(const ref of refs){
+    try{ const raw = await fetchGameRef(ref); games.push(normGame(raw)); }catch(e){ console.warn(e); }
+  }
+  // sort newest first by date or by filename if date missing
+  games.sort((a,b)=> Date.parse(b.date||0)-Date.parse(a.date||0));
+  return games;
+}
+
+// Aggregation helpers
+const sum = (arr, key)=> arr.reduce((s,x)=> s + Number(x[key]||0), 0);
+function standingsFrom(games){
+  const map = new Map();
+  const ensure=(id,name)=>{ if(!map.has(id)) map.set(id,{id,name,wins:0,losses:0,gp:0,pf:0,pa:0}); return map.get(id); };
+  games.forEach(g=>{
+    const H=g.home, A=g.away; const th=ensure(H.id,H.name), ta=ensure(A.id,A.name);
+    th.gp++; ta.gp++; th.pf+=H.score; th.pa+=A.score; ta.pf+=A.score; ta.pa+=H.score;
+    if(H.score>A.score){ th.wins++; ta.losses++; } else { ta.wins++; th.losses++; }
+  });
+  return [...map.values()].map(t=> ({...t, diff:t.pf - t.pa})).sort((a,b)=> b.wins-a.wins || a.losses-b.losses || (b.diff-a.diff));
+}
+
+(async function(){
+  const host=document.querySelector('#player-leaders');
+  const games = await loadAllGames();
+  if(!games.length){ host.innerHTML='<div class="empty"><strong>No games found.</strong><div class="kicker">Drop JSON files in Euro2KL/assets/data/boxscores/</div></div>'; return; }
+  const game = games[0]; // latest
+  const players = game.home.players.concat(game.away.players);
+  const round=(x,d=1)=> Number.parseFloat(x??0).toFixed(d);
+  const by=k=>(a,b)=> (b[k]??0)-(a[k]??0);
+  function render(title, rows){ const card=document.createElement('div'); card.className='card'; card.innerHTML=`<h3>${title}</h3><table class="table"><tbody></tbody></table>`; const tb=card.querySelector('tbody'); rows.forEach((r,i)=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td class="rank">${i+1}.</td><td>${r.name}</td><td style="text-align:right">${r.val}</td>`; tb.appendChild(tr); }); host.appendChild(card); }
+  const cats=[['POINTS','pts',0],['REBOUNDS','reb',0],['ASSISTS','ast',0],['STEALS','stl',0],['BLOCKS','blk',0],['3-PT MADE','tpm',0],['FIELD GOAL %','fg',1,p=>p.fga? (100*(p.fgm||0)/p.fga).toFixed(1)+'%':'—'],['3-PT %','tp',1,p=>p.tpa? (100*(p.tpm||0)/p.tpa).toFixed(1)+'%':'—']];
+  cats.forEach(([label,key,dp,fmt])=>{
+    const top=[...players].sort(by(key)).slice(0,5).map(p=>({name:p.gamertag||p.name||'—', val: fmt?fmt(p):round(p[key],dp)}));
+    render(label, top);
+  });
 })();
 </script>
-</body>
-</html>
+</body></html>

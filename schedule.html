@@ -1,37 +1,102 @@
 <!doctype html>
-<html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Schedule · Euro2KLeague</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Inter:wght@400;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="mini.css" />
-</head>
-<body><main class="container" style="padding:12px 0 28px">
-<h1>Schedule</h1><div class="card"><div class="table">
-<table id="tbl"><thead><tr><th>Date</th><th>Home</th><th>Away</th><th>Score</th><th>Status</th></tr></thead><tbody></tbody></table>
-</div></div></main>
-
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Euro2KLeague — Schedule</title>
+<link rel="stylesheet" href="stats.css">
+</head><body>
+<div class="wrapper">
+  <div class="header">
+    <div class="logo">E2K</div><h1>Stats</h1>
+    <div class="subnav">
+      <a href="leaders-players.html">Player Leaders</a>
+      <a href="leaders-teams.html">Team Leaders</a>
+      <a href="schedule.html">Schedule</a>
+      <a href="standings.html">Standings</a>
+    </div>
+  </div>
+  <div class="section-title"><h2>Schedule</h2><span class="badge">AUTO</span></div><div class="list" id="schedule"></div>
+  <footer>Euro2KLeague — auto boxscores • Generated 2025-09-05</footer>
+</div>
 <script>
-const BASE = (()=>{ const s = location.pathname.split('/').filter(Boolean); return s.length ? '/' + s[0] + '/' : '/'; })();
-const pct = (m,a) => a ? ((m/a)*100).toFixed(1)+'%' : '—';
-const per = (n,g) => g ? (n/g).toFixed(1) : '0.0';
-async function getJSON(path){
-  const url = BASE + path;
-  const r = await fetch(url, {cache:'no-store'});
-  if(!r.ok) throw new Error(url + ' ' + r.status);
-  return r.json();
+const CONFIG = {
+  owner: '300goneclear',
+  repo: '300goneclear.github.io',
+  branch: 'main',
+  dir: 'Euro2KL/assets/data/boxscores' // drop EVERY boxscore .json here
+};
+const LOCAL_BASES = ['/Euro2KL/assets/data','assets/data','/assets/data'];
+const RAW = (path)=> `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/${path}`;
+const GH_LIST = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.dir}?ref=${CONFIG.branch}`;
+
+async function listBoxscores(){
+  try{
+    const res = await fetch(GH_LIST, {cache:'no-store'});
+    if(!res.ok) throw new Error('GitHub list failed '+res.status);
+    const files = await res.json();
+    const jsons = files.filter(f=>/\.json$/i.test(f.name)).map(f=>({ name:f.name, path:`${CONFIG.dir}/${f.name}` }));
+    if(jsons.length) return jsons;
+  }catch(e){ /* fall back below */ }
+  // fallback to local manifest or single file
+  for(const base of LOCAL_BASES){
+    try{ const g=await fetch(`${base}/games.json`,{cache:'no-store'}); if(g.ok){ const body=await g.json(); const arr=Array.isArray(body)?body:(body.games||[]); if(arr.length) return arr.map((game,i)=>({inline:game, name:`inline-${i}.json`})); } }catch(_){}
+  }
+  for(const base of LOCAL_BASES){
+    try{ const b=await fetch(`${base}/boxscore.json`,{cache:'no-store'}); if(b.ok){ const game=await b.json(); return [{inline:(game.game||game), name:'boxscore.json'}]; } }catch(_){}
+  }
+  return [];
 }
-</script>
 
-<script>
-(async () => {
-  const games = await getJSON('assets/data/games.json');
-  const b = document.querySelector('#tbl tbody');
-  if(!games.length){ b.innerHTML = '<tr><td colspan="5" style="padding:16px;color:#a8b4d8">No games yet.</td></tr>'; return; }
-  games.forEach(g => {
-    const score = g.status==='final' ? `${g.homeScore}–${g.awayScore}` : '—';
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${g.date||'TBA'}</td><td>${g.home}</td><td>${g.away}</td><td>${score}</td><td>${g.status}</td>`;
-    b.appendChild(tr);
+async function fetchGameRef(ref){
+  if(ref.inline) return ref.inline;
+  const url = RAW(ref.path);
+  const r = await fetch(url, {cache:'no-store'});
+  if(!r.ok) throw new Error('Fetch '+ref.name+' → '+r.status);
+  const body = await r.json();
+  return body.game || body;
+}
+
+function normGame(g){
+  const H = g.home||{}, A=g.away||{};
+  return {
+    id: String(g.game_id||g.id||`${H.name||'Home'}-${A.name||'Away'}-${g.date||''}`),
+    date: g.date || '',
+    home: { id:H.id||H.name||'HOME', name:H.name||H.team||H.id||'Home', score:Number(H.score||0), quarters:H.quarters||[], totals:H.totals||{}, players:H.players||[] },
+    away: { id:A.id||A.name||'AWAY', name:A.name||A.team||A.id||'Away', score:Number(A.score||0), quarters:A.quarters||[], totals:A.totals||{}, players:A.players||[] }
+  };
+}
+
+async function loadAllGames(){
+  const refs = await listBoxscores();
+  const games = [];
+  for(const ref of refs){
+    try{ const raw = await fetchGameRef(ref); games.push(normGame(raw)); }catch(e){ console.warn(e); }
+  }
+  // sort newest first by date or by filename if date missing
+  games.sort((a,b)=> Date.parse(b.date||0)-Date.parse(a.date||0));
+  return games;
+}
+
+// Aggregation helpers
+const sum = (arr, key)=> arr.reduce((s,x)=> s + Number(x[key]||0), 0);
+function standingsFrom(games){
+  const map = new Map();
+  const ensure=(id,name)=>{ if(!map.has(id)) map.set(id,{id,name,wins:0,losses:0,gp:0,pf:0,pa:0}); return map.get(id); };
+  games.forEach(g=>{
+    const H=g.home, A=g.away; const th=ensure(H.id,H.name), ta=ensure(A.id,A.name);
+    th.gp++; ta.gp++; th.pf+=H.score; th.pa+=A.score; ta.pf+=A.score; ta.pa+=H.score;
+    if(H.score>A.score){ th.wins++; ta.losses++; } else { ta.wins++; th.losses++; }
+  });
+  return [...map.values()].map(t=> ({...t, diff:t.pf - t.pa})).sort((a,b)=> b.wins-a.wins || a.losses-b.losses || (b.diff-a.diff));
+}
+
+(async function(){
+  const list=document.querySelector('#schedule');
+  const games = await loadAllGames();
+  if(!games.length){ list.innerHTML='<div class="empty"><strong>No games found.</strong><div class="kicker">Drop JSON files in Euro2KL/assets/data/boxscores/</div></div>'; return; }
+  games.forEach(g=>{
+    const row=document.createElement('div'); row.className='row';
+    row.innerHTML=`<div><div>${g.home.name} vs ${g.away.name}</div><div class="small">${g.date}</div></div><div>${g.home.score} - ${g.away.score}</div>`;
+    list.appendChild(row);
   });
 })();
 </script>
