@@ -1,8 +1,6 @@
 
-/* Euro2KLeague Stats Lookalike (no scoreboard) */
 :root{ --bg:#0b0d12; --panel:#11151c; --panel-2:#161b22; --text:#e7ecf3; --muted:#a6b3c2; --accent:#ffd166; --divider:#202734; }
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif}
+*{box-sizing:border-box} html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial}
 a{color:#69a7ff;text-decoration:none} a:hover{text-decoration:underline}
 .wrapper{max-width:1200px;margin:0 auto;padding:16px}
 .header{display:flex;align-items:center;gap:12px;padding:8px 0 16px;border-bottom:1px solid var(--divider);margin-bottom:16px}
