@@ -9,15 +9,6 @@
     "bpg": 4.0
   },
   {
-    "id": "BAY",
-    "name": "Bayern Ballers Gaming",
-    "ppg": 53.0,
-    "rpg": 13.0,
-    "apg": 8.0,
-    "spg": 2.0,
-    "bpg": 2.0
-  },
-  {
     "id": "ASU",
     "name": "ASURA CORP",
     "ppg": 68.0,
@@ -27,6 +18,15 @@
     "bpg": 1.0
   },
   {
+    "id": "BAY",
+    "name": "Bayern Ballers Gaming",
+    "ppg": 53.0,
+    "rpg": 13.0,
+    "apg": 8.0,
+    "spg": 2.0,
+    "bpg": 2.0
+  },
+  {
     "id": "SPL",
     "name": "SPL YCE eSports",
     "ppg": 46.0,
@@ -34,5 +34,23 @@
     "apg": 11.0,
     "spg": 5.0,
     "bpg": 0.0
+  },
+  {
+    "id": "UDG",
+    "name": "x UnderDogs GamingX",
+    "ppg": 60.0,
+    "rpg": 25.0,
+    "apg": 17.0,
+    "spg": 5.0,
+    "bpg": 2.0
+  },
+  {
+    "id": "DMN",
+    "name": "IDemnDevi1sl / Damn Devils",
+    "ppg": 49.0,
+    "rpg": 17.0,
+    "apg": 13.0,
+    "spg": 8.0,
+    "bpg": 2.0
   }
 ]

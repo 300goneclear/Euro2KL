@@ -3,6 +3,16 @@
   "updated": "2025-09-05",
   "standings": [
     {
+      "id": "UDG",
+      "name": "x UnderDogs GamingX",
+      "wins": 1,
+      "losses": 0,
+      "gp": 1,
+      "pf": 60,
+      "pa": 49,
+      "diff": 11
+    },
+    {
       "id": "FEN",
       "name": "Fenerbahce",
       "wins": 1,
@@ -41,6 +51,16 @@
       "pf": 46,
       "pa": 53,
       "diff": -7
+    },
+    {
+      "id": "DMN",
+      "name": "IDemnDevi1sl / Damn Devils",
+      "wins": 0,
+      "losses": 1,
+      "gp": 1,
+      "pf": 49,
+      "pa": 60,
+      "diff": -11
     }
   ]
 }

@@ -365,6 +365,189 @@
           }
         ]
       }
+    },
+    {
+      "game_id": "2025-09-06-UDG-DMN",
+      "date": "2025-09-06",
+      "status": "Final",
+      "home": {
+        "id": "UDG",
+        "name": "x UnderDogs GamingX",
+        "score": 60,
+        "quarters": [
+          18,
+          14,
+          19,
+          9
+        ],
+        "totals": {
+          "reb": 25,
+          "ast": 17,
+          "stl": 5,
+          "blk": 2
+        },
+        "players": [
+          {
+            "gamertag": "alvaroolemes",
+            "pts": 30,
+            "reb": 2,
+            "ast": 6,
+            "stl": 1,
+            "blk": 0,
+            "fgm": 11,
+            "fga": 16,
+            "tpm": 8,
+            "tpa": 13,
+            "to": 3,
+            "fouls": 0
+          },
+          {
+            "gamertag": "MCris-",
+            "pts": 8,
+            "reb": 3,
+            "ast": 2,
+            "stl": 0,
+            "blk": 0,
+            "fgm": 3,
+            "fga": 6,
+            "tpm": 1,
+            "tpa": 4,
+            "to": 0,
+            "fouls": 0
+          },
+          {
+            "gamertag": "Jose-Albe2k",
+            "pts": 16,
+            "reb": 1,
+            "ast": 4,
+            "stl": 2,
+            "blk": 0,
+            "fgm": 6,
+            "fga": 11,
+            "tpm": 4,
+            "tpa": 7,
+            "to": 2,
+            "fouls": 2
+          },
+          {
+            "gamertag": "TsT_Rooster",
+            "pts": 6,
+            "reb": 6,
+            "ast": 1,
+            "stl": 2,
+            "blk": 0,
+            "fgm": 3,
+            "fga": 5,
+            "tpm": 0,
+            "tpa": 2,
+            "to": 1,
+            "fouls": 3
+          },
+          {
+            "gamertag": "Stop_The_Jokes",
+            "pts": 0,
+            "reb": 13,
+            "ast": 4,
+            "stl": 0,
+            "blk": 2,
+            "fgm": 0,
+            "fga": 3,
+            "tpm": 0,
+            "tpa": 1,
+            "to": 2,
+            "fouls": 1
+          }
+        ]
+      },
+      "away": {
+        "id": "DMN",
+        "name": "IDemnDevi1sl / Damn Devils",
+        "score": 49,
+        "quarters": [
+          11,
+          15,
+          16,
+          7
+        ],
+        "totals": {
+          "reb": 17,
+          "ast": 13,
+          "stl": 8,
+          "blk": 2
+        },
+        "players": [
+          {
+            "gamertag": "BigDaddyKORN",
+            "pts": 14,
+            "reb": 0,
+            "ast": 8,
+            "stl": 0,
+            "blk": 0,
+            "fgm": 5,
+            "fga": 18,
+            "tpm": 2,
+            "tpa": 12,
+            "to": 2,
+            "fouls": 3
+          },
+          {
+            "gamertag": "DamnDrippyLOGOS",
+            "pts": 5,
+            "reb": 1,
+            "ast": 2,
+            "stl": 1,
+            "blk": 0,
+            "fgm": 1,
+            "fga": 7,
+            "tpm": 0,
+            "tpa": 5,
+            "to": 1,
+            "fouls": 1
+          },
+          {
+            "gamertag": "WhoThatBoiJosip",
+            "pts": 13,
+            "reb": 1,
+            "ast": 2,
+            "stl": 5,
+            "blk": 0,
+            "fgm": 4,
+            "fga": 7,
+            "tpm": 3,
+            "tpa": 6,
+            "to": 5,
+            "fouls": 1
+          },
+          {
+            "gamertag": "DMN-DogtorColo_",
+            "pts": 3,
+            "reb": 7,
+            "ast": 0,
+            "stl": 1,
+            "blk": 0,
+            "fgm": 1,
+            "fga": 2,
+            "tpm": 1,
+            "tpa": 2,
+            "to": 1,
+            "fouls": 1
+          },
+          {
+            "gamertag": "MacGomon",
+            "pts": 14,
+            "reb": 8,
+            "ast": 1,
+            "stl": 1,
+            "blk": 2,
+            "fgm": 7,
+            "fga": 9,
+            "tpm": 0,
+            "tpa": 0,
+            "to": 0,
+            "fouls": 0
+          }
+        ]
+      }
     }
   ]
 }
