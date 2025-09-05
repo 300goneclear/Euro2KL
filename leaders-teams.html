@@ -1,62 +1,112 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Euro2KLeague — Team Leaders</title>
-  <link rel="stylesheet" href="stats.css">
-</head>
-<body>
-  <div class="wrapper">
-    <div class="header">
-      <div class="logo">E2K</div><h1>Stats</h1>
-      <div class="subnav">
-        <a href="leaders-players.html">Player Leaders</a>
-        <a class="active" href="leaders-teams.html">Team Leaders</a>
-      </div>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Euro2KLeague — Team Leaders</title>
+<link rel="stylesheet" href="stats.css">
+</head><body>
+<div class="wrapper">
+  <div class="header">
+    <div class="logo">E2K</div><h1>Stats</h1>
+    <div class="subnav">
+      <a href="leaders-players.html">Player Leaders</a>
+      <a href="leaders-teams.html">Team Leaders</a>
+      <a href="schedule.html">Schedule</a>
+      <a href="standings.html">Standings</a>
     </div>
-
-    <div class="section-title">
-      <h2>Team Leaders</h2><span class="badge">BETA</span>
-    </div>
-
-    <div class="grid">
-      <div class="leaders" id="team-leaders">
-        <!-- Team leader cards will be injected here by JS (if used) -->
-        <div class="card empty">Team leaders will display here. This page no longer shows Schedule or Standings controls — use your existing Schedule and Standings pages.</div>
-      </div>
-      <aside id="sidebar-right"></aside>
-    </div>
-
-    <footer>Euro2KLeague — stats layout pack • Generated 2025-09-05</footer>
   </div>
+  <div class="section-title"><h2>Team Leaders</h2><span class="badge">AUTO</span></div><div class="grid"><div class="leaders" id="team-leaders"></div></div>
+  <footer>Euro2KLeague — auto boxscores • Generated 2025-09-05</footer>
+</div>
+<script>
+const CONFIG = {
+  owner: '300goneclear',
+  repo: '300goneclear.github.io',
+  branch: 'main',
+  dir: 'Euro2KL/assets/data/boxscores' // drop EVERY boxscore .json here
+};
+const LOCAL_BASES = ['/Euro2KL/assets/data','assets/data','/assets/data'];
+const RAW = (path)=> `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/${path}`;
+const GH_LIST = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.dir}?ref=${CONFIG.branch}`;
 
-  <script>
-    (function(){ 
-      // This page intentionally keeps the header minimal (no schedule/standings links).
-      // If you want dynamic population, load /Euro2KL/assets/data/team_stats.json and render.
-      async function loadAndRender(){
-        try{
-          const bases=['/Euro2KL/assets/data','assets/data','/assets/data'];
-          let data=null;
-          for(const b of bases){
-            try{
-              const r = await fetch(b + '/team_stats.json',{cache:'no-store'});
-              if(r.ok){ data = await r.json(); break; }
-            }catch(e){}
-          }
-          if(!data) return;
-          const host=document.getElementById('team-leaders');
-          host.innerHTML='';
-          data.slice(0,10).forEach(function(t,i){
-            const card=document.createElement('div'); card.className='card';
-            card.innerHTML='<h3>POINTS PER GAME</h3><table class="table"><tbody><tr><td class="rank>' + (i+1) + '.</td><td>' + t.name + '</td><td style="text-align:right">' + Number(t.ppg).toFixed(1) + '</td></tr></tbody></table>';
-            host.appendChild(card);
-          });
-        }catch(e){ console.warn(e); }
-      }
-      loadAndRender();
-    })();
-  </script>
-</body>
-</html>
+async function listBoxscores(){
+  try{
+    const res = await fetch(GH_LIST, {cache:'no-store'});
+    if(!res.ok) throw new Error('GitHub list failed '+res.status);
+    const files = await res.json();
+    const jsons = files.filter(f=>/\.json$/i.test(f.name)).map(f=>({ name:f.name, path:`${CONFIG.dir}/${f.name}` }));
+    if(jsons.length) return jsons;
+  }catch(e){ /* fall back below */ }
+  // fallback to local manifest or single file
+  for(const base of LOCAL_BASES){
+    try{ const g=await fetch(`${base}/games.json`,{cache:'no-store'}); if(g.ok){ const body=await g.json(); const arr=Array.isArray(body)?body:(body.games||[]); if(arr.length) return arr.map((game,i)=>({inline:game, name:`inline-${i}.json`})); } }catch(_){}
+  }
+  for(const base of LOCAL_BASES){
+    try{ const b=await fetch(`${base}/boxscore.json`,{cache:'no-store'}); if(b.ok){ const game=await b.json(); return [{inline:(game.game||game), name:'boxscore.json'}]; } }catch(_){}
+  }
+  return [];
+}
+
+async function fetchGameRef(ref){
+  if(ref.inline) return ref.inline;
+  const url = RAW(ref.path);
+  const r = await fetch(url, {cache:'no-store'});
+  if(!r.ok) throw new Error('Fetch '+ref.name+' → '+r.status);
+  const body = await r.json();
+  return body.game || body;
+}
+
+function normGame(g){
+  const H = g.home||{}, A=g.away||{};
+  return {
+    id: String(g.game_id||g.id||`${H.name||'Home'}-${A.name||'Away'}-${g.date||''}`),
+    date: g.date || '',
+    home: { id:H.id||H.name||'HOME', name:H.name||H.team||H.id||'Home', score:Number(H.score||0), quarters:H.quarters||[], totals:H.totals||{}, players:H.players||[] },
+    away: { id:A.id||A.name||'AWAY', name:A.name||A.team||A.id||'Away', score:Number(A.score||0), quarters:A.quarters||[], totals:A.totals||{}, players:A.players||[] }
+  };
+}
+
+async function loadAllGames(){
+  const refs = await listBoxscores();
+  const games = [];
+  for(const ref of refs){
+    try{ const raw = await fetchGameRef(ref); games.push(normGame(raw)); }catch(e){ console.warn(e); }
+  }
+  // sort newest first by date or by filename if date missing
+  games.sort((a,b)=> Date.parse(b.date||0)-Date.parse(a.date||0));
+  return games;
+}
+
+// Aggregation helpers
+const sum = (arr, key)=> arr.reduce((s,x)=> s + Number(x[key]||0), 0);
+function standingsFrom(games){
+  const map = new Map();
+  const ensure=(id,name)=>{ if(!map.has(id)) map.set(id,{id,name,wins:0,losses:0,gp:0,pf:0,pa:0}); return map.get(id); };
+  games.forEach(g=>{
+    const H=g.home, A=g.away; const th=ensure(H.id,H.name), ta=ensure(A.id,A.name);
+    th.gp++; ta.gp++; th.pf+=H.score; th.pa+=A.score; ta.pf+=A.score; ta.pa+=H.score;
+    if(H.score>A.score){ th.wins++; ta.losses++; } else { ta.wins++; th.losses++; }
+  });
+  return [...map.values()].map(t=> ({...t, diff:t.pf - t.pa})).sort((a,b)=> b.wins-a.wins || a.losses-b.losses || (b.diff-a.diff));
+}
+
+(async function(){
+  const host=document.querySelector('#team-leaders');
+  const games = await loadAllGames();
+  if(!games.length){ host.innerHTML='<div class="empty"><strong>No games found.</strong><div class="kicker">Drop JSON files in Euro2KL/assets/data/boxscores/</div></div>'; return; }
+  // compute per-game averages using all games
+  const teams=new Map();
+  const ensure=(id,name)=>{ if(!teams.has(id)) teams.set(id,{id,name,gp:0,pts:0,reb:0,ast:0,stl:0,blk:0}); return teams.get(id); };
+  games.forEach(g=>{
+    const H=g.home, A=g.away; const th=ensure(H.id,H.name), ta=ensure(A.id,A.name);
+    th.gp++; ta.gp++; th.pts+=H.score; ta.pts+=A.score;
+    const add=(t,team)=>{ const k=team.totals||{}; t.reb+=k.reb||0; t.ast+=k.ast||0; t.stl+=k.stl||0; t.blk+=k.blk||0; };
+    add(th,H); add(ta,A);
+  });
+  const arr=[...teams.values()].map(t=> ({...t, ppg:t.pts/Math.max(1,t.gp), rpg:t.reb/Math.max(1,t.gp), apg:t.ast/Math.max(1,t.gp), spg:t.stl/Math.max(1,t.gp), bpg:t.blk/Math.max(1,t.gp)}));
+  const round=(x,d=1)=> Number.parseFloat(x??0).toFixed(d);
+  const by=k=>(a,b)=> (b[k]??0)-(a[k]??0);
+  function render(title,key){ const card=document.createElement('div'); card.className='card'; card.innerHTML=`<h3>${title}</h3><table class="table"><tbody></tbody></table>`; const tb=card.querySelector('tbody'); [...arr].sort(by(key)).slice(0,5).forEach((t,i)=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td class="rank">${i+1}.</td><td>${t.name}</td><td style="text-align:right">${round(t[key],1)}</td>`; tb.appendChild(tr); }); host.appendChild(card); }
+  ['ppg','rpg','apg','spg','bpg'].forEach((key,i)=> render(['POINTS PER GAME','REBOUNDS PER GAME','ASSISTS PER GAME','STEALS PER GAME','BLOCKS PER GAME'][i], key));
+})();
+</script>
+</body></html>
