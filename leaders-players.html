@@ -1,96 +1,43 @@
-
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Euro2KLeague — Player Leaders (Multi‑path)</title>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Euro2KLeague — Player Leaders (games.json)</title>
   <link rel="stylesheet" href="stats.css">
-</head>
-<body>
-  <div class="wrapper">
-    <div class="header">
-      <div class="logo">E2K</div><h1>Stats</h1>
-      <div class="subnav">
-        <a class="active" href="leaders-players.html">Player Leaders</a>
-        <a href="leaders-teams.html">Team Leaders</a>
-      </div>
-    </div>
-
-    <div id="debug" class="debug" style="display:none"></div>
-
-    <div class="section-title">
-      <h2>Game Leaders</h2><span class="badge">AUTO</span>
-    </div>
-    <div class="grid">
-      <div class="leaders" id="player-leaders"></div>
-      <aside class="sidebar" id="sidebar-right"></aside>
-    </div>
-
-    <footer>Euro2KLeague — multi‑path build • Generated 2025-09-05</footer>
+</head><body>
+<div class="wrapper">
+  <div class="header">
+    <div class="logo">E2K</div><h1>Stats</h1>
+    <div class="subnav"><a class="active" href="leaders-players.html">Player Leaders</a><a href="leaders-teams.html">Team Leaders</a></div>
   </div>
-
+  <div id="debug" class="debug" style="display:none"></div>
+  <div class="section-title"><h2>Game Leaders</h2><span class="badge">GAMES.JSON</span></div>
+  <div class="grid"><div class="leaders" id="player-leaders"></div><aside class="sidebar" id="sidebar-right"></aside></div>
+  <footer>Euro2KLeague — reads games.json • Generated 2025-09-05</footer>
+</div>
 <script>
-
 (() => {
   const QS = new URLSearchParams(location.search);
   const DEBUG = QS.has('debug');
-  const wrapper = document.querySelector('.wrapper');
-  function dbg(msg) { if(!DEBUG) return; const d=document.getElementById('debug'); d.style.display='block'; d.innerHTML += `<div>${msg}</div>`; }
-  function showEmpty(where,msg,det) { const div=document.createElement('div'); div.className='empty'; div.innerHTML=`<strong>${msg}</strong>${det?`<div class="kicker">${det}</div>`:''}`; where.appendChild(div); }
-
-  // Allow override via ?box=<path or filename>
-  const override = QS.get('box');
-
-  const CANDIDATE_FILES = [
-    'boxscores/latest.json',
-    'boxscores/current.json',
-    'boxscores/boxscore.json',
-    'boxscore.json'
-  ];
   const BASES = ['/Euro2KL/assets/data','assets/data','/assets/data'];
+  function dbg(msg){ if(!DEBUG) return; const d=document.getElementById('debug'); d.style.display='block'; d.innerHTML += `<div>${msg}</div>`; }
+  function showEmpty(where,msg,det){ const div=document.createElement('div'); div.className='empty'; div.innerHTML = `<strong>${msg}</strong>${det?`<div class="kicker">${det}</div>`:''}`; where.appendChild(div); }
 
-  function buildCandidates() {
-    const urls = [];
-    if(override) {
-      // Absolute path or url
-      if(/^(https?:)?\/\//.test(override)) urls.push(override);
-      else {
-        // Try as-is and with bases
-        urls.push(override.replace(/^\//,''));
-        BASES.forEach(b => urls.push(`${b.replace(/\/$/,'')}/${override.replace(/^\//,'')}`));
-      }
+  async function tryFetchJSON(file){
+    const tried = [];
+    for(const base of BASES){
+      const url = `${base.replace(/\/$/,'')}/${file.replace(/^\//,'')}`;
+      try{ const r = await fetch(url, {cache:'no-store'}); dbg(`TRY ${url} → ${r.status}`); if(r.ok) return await r.json(); tried.push(`${url} → ${r.status}`); } catch(e){ tried.push(`${url} → ${e.message}`); dbg(`ERR ${url} → ${e.message}`); }
     }
-    BASES.forEach(b => CANDIDATE_FILES.forEach(f => urls.push(`${b.replace(/\/$/,'')}/${f}`)));
-    return urls;
+    const err = new Error('All paths failed for '+file); err._tried = tried; throw err;
   }
 
-  async function fetchFirstJSON(urls) {
-    for (const url of urls) {
-      try {
-        const r = await fetch(url, { cache:'no-store' });
-        dbg(`TRY: ${url} → ${r.status}`);
-        if (r.ok) return await r.json();
-      } catch(e) { dbg(`ERR: ${url} → ${e.message}`); }
-    }
-    // Optional GitHub fallback: list Euro2KL/assets/data/boxscores and use latest file
-    try {
-      const owner='300goneclear', repo='300goneclear.github.io', branch='main', dir='Euro2KL/assets/data/boxscores';
-      const listUrl=`https://api.github.com/repos/${owner}/${repo}/contents/${dir}?ref=${branch}`;
-      const res=await fetch(listUrl, {cache:'no-store'});
-      if(res.ok) {
-        const files=await res.json();
-        const jsons=files.filter(f=>/\.json$/i.test(f.name));
-        jsons.sort((a,b)=> (a.name<b.name?1:-1)); // simple filename sort (YYYY-MM-DD-* recommended)
-        if(jsons.length) {
-          const raw=`https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${dir}/${jsons[0].name}`;
-          const r=await fetch(raw, {cache:'no-store'});
-          if(r.ok) return await r.json();
-        }
-      }
-    } catch(e) { dbg('GitHub fallback failed: '+e.message); }
-
-    throw new Error('No valid data source found.');
+  function pickLatestGame(raw){
+    const arr = Array.isArray(raw) ? raw : (raw.games || raw.data || []);
+    if(!arr.length) return null;
+    // pick by date field, fallback to position 0
+    const sorted = arr.slice().sort((a,b)=> Date.parse(b.date||b.gameDate||b.start_time||0) - Date.parse(a.date||a.gameDate||a.start_time||0));
+    return sorted[0];
   }
 
   function renderCard(where, title, rows){
@@ -105,18 +52,21 @@
 
   async function run(){
     const host=document.getElementById('player-leaders');
-    let data;
-    try {
-      const urls = buildCandidates();
-      dbg('<b>Candidate URLs:</b><br>'+urls.map(u=>'• '+u).join('<br>'));
-      data = await fetchFirstJSON(urls);
-    } catch(e) {
-      showEmpty(host, 'Couldn’t load a box score from any data path.', e.message);
-      return;
+    // 1) try games.json (preferred)
+    let rawGames = null;
+    try{ rawGames = await tryFetchJSON('games.json'); dbg('Loaded games.json'); }
+    catch(e){ dbg('games.json not available'); }
+    let game = null;
+    if(rawGames){ game = pickLatestGame(rawGames); }
+    // 2) fallback to boxscore.json (legacy)
+    if(!game){
+      try{ const box = await tryFetchJSON('boxscore.json'); game = box.game || box; dbg('Loaded boxscore.json fallback'); }
+      catch(e){ dbg('boxscore.json fallback failed'); }
     }
-    const game = data.game || data;
+    if(!game){ showEmpty(host,'No games found in games.json or boxscore.json.','Upload games.json with games[] or a boxscore.json'); return; }
+
     const players = [].concat(game.home?.players||[], game.away?.players||[]);
-    if(!players.length) { showEmpty(host, 'No player lines found.', 'Expected home.players and away.players arrays.'); return; }
+    if(!players.length){ showEmpty(host,'No player arrays detected in the chosen game.','Expected home.players and away.players arrays.'); return; }
 
     const cats = [
       ['POINTS','pts',0],
@@ -130,14 +80,12 @@
       ['FREE THROW %','ft',1, p => (p.fta? (100*(p.ftm||0)/p.fta).toFixed(1)+'%':'—')]
     ];
     for(const [label,key,dp,fmt] of cats){
-      const top=[...players].sort(by(key)).slice(0,5).map(p=>({ name: p.gamertag||p.name||'—', val: fmt?fmt(p):round(p[key],dp) }));
+      const top = [...players].sort(by(key)).slice(0,5).map(p=>({ name: p.gamertag||p.name||p.playerName||'—', val: fmt?fmt(p):round(p[key],dp) }));
       renderCard(host, label, top);
     }
   }
 
   run();
 })();
-
 </script>
-</body>
-</html>
+</body></html>
