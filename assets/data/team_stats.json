@@ -1,0 +1,38 @@
+[
+  {
+    "id": "FEN",
+    "name": "Fenerbahce",
+    "ppg": 75.0,
+    "rpg": 14.0,
+    "apg": 19.0,
+    "spg": 4.0,
+    "bpg": 4.0
+  },
+  {
+    "id": "BAY",
+    "name": "Bayern Ballers Gaming",
+    "ppg": 53.0,
+    "rpg": 13.0,
+    "apg": 8.0,
+    "spg": 2.0,
+    "bpg": 2.0
+  },
+  {
+    "id": "ASU",
+    "name": "ASURA CORP",
+    "ppg": 68.0,
+    "rpg": 14.0,
+    "apg": 11.0,
+    "spg": 3.0,
+    "bpg": 1.0
+  },
+  {
+    "id": "SPL",
+    "name": "SPL YCE eSports",
+    "ppg": 46.0,
+    "rpg": 11.0,
+    "apg": 11.0,
+    "spg": 5.0,
+    "bpg": 0.0
+  }
+]

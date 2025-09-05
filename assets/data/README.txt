@@ -1,6 +1,10 @@
-Replace your current file with this one:
+Euro2KL_SEASON_DATA_PACK (regenerated 2025-09-05)
+Upload all JSONs to: Euro2KL/assets/data/
 
-/Euro2KL/assets/data/boxscore.json
+Files:
+- games.json
+- standings.json
+- team_stats.json
+- players.json
+- stats-admin.html (in-browser tool to append a new boxscore and recompute)
 
-It contains Bayern Ballers Gaming 53 — SPLYCE eSports 46 with Q1–Q4 splits and player lines.
-After uploading, hard refresh your pages (or add ?v=4 to the URL) and the leaders will update.

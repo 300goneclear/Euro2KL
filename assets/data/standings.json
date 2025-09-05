@@ -1,16 +1,46 @@
-[
-  {
-    "team": "Fenerbache",
-    "wins": 1,
-    "losses": 0,
-    "pf": 75,
-    "pa": 68
-  },
-  {
-    "team": "Asura",
-    "wins": 0,
-    "losses": 1,
-    "pf": 68,
-    "pa": 75
-  }
-]
+{
+  "season": "2025",
+  "updated": "2025-09-05",
+  "standings": [
+    {
+      "id": "FEN",
+      "name": "Fenerbahce",
+      "wins": 1,
+      "losses": 0,
+      "gp": 1,
+      "pf": 75,
+      "pa": 68,
+      "diff": 7
+    },
+    {
+      "id": "BAY",
+      "name": "Bayern Ballers Gaming",
+      "wins": 1,
+      "losses": 0,
+      "gp": 1,
+      "pf": 53,
+      "pa": 46,
+      "diff": 7
+    },
+    {
+      "id": "ASU",
+      "name": "ASURA CORP",
+      "wins": 0,
+      "losses": 1,
+      "gp": 1,
+      "pf": 68,
+      "pa": 75,
+      "diff": -7
+    },
+    {
+      "id": "SPL",
+      "name": "SPL YCE eSports",
+      "wins": 0,
+      "losses": 1,
+      "gp": 1,
+      "pf": 46,
+      "pa": 53,
+      "diff": -7
+    }
+  ]
+}

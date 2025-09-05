@@ -1,0 +1,61 @@
+
+<!doctype html><html><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E2K Data Admin — merge boxscore into season files</title>
+<style>
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;background:#0b0d12;color:#e7ecf3;margin:0}
+  .wrap{max-width:900px;margin:0 auto;padding:20px}
+  h1{margin:0 0 10px}
+  .card{border:1px solid #202734;background:#11151c;border-radius:10px;padding:16px;margin:12px 0}
+  button,input[type=file]{background:#1b2330;color:#e7ecf3;border:1px solid #2a3445;border-radius:8px;padding:8px 12px}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  pre{background:#0f172a;color:#cbd5e1;padding:10px;border-radius:6px;overflow:auto;max-height:260px}
+</style>
+</head><body><div class="wrap">
+  <h1>Euro2KL — Season Data Admin</h1>
+  <p>Loads existing <code>games.json</code> from <b>/Euro2KL/assets/data</b>, lets you <b>add a boxscore.json</b>, and recomputes <code>standings.json</code>, <code>team_stats.json</code>, and <code>players.json</code>. Download and commit the files.</p>
+
+  <div class="card">
+    <div class="row">
+      <button id="load">Load current games.json</button>
+      <input id="box" type="file" accept="application/json">
+      <button id="merge" disabled>Merge & Recompute</button>
+    </div>
+    <div id="log"></div>
+  </div>
+
+  <div class="card">
+    <h3>Downloads</h3>
+    <div id="downloads">Nothing yet.</div>
+  </div>
+
+<script>
+const DATA_BASES=['/Euro2KL/assets/data','assets/data','/assets/data'];
+const log=(html)=>{const d=document.getElementById('log');const p=document.createElement('div');p.innerHTML=html;d.appendChild(p);};
+async function fetchJSON(file){for(const b of DATA_BASES){try{const r=await fetch(`${b}/${file}`,{cache:'no-store'});if(r.ok){log(`Loaded <code>${b}/${file}</code>`);return await r.json();}}catch(_){}}throw new Error('Unable to load '+file);}
+function blobUrl(obj){return URL.createObjectURL(new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}));}
+function dl(name,obj){const a=document.createElement('a');a.textContent=name;a.download=name;a.href=blobUrl(obj);a.style.marginRight='10px';return a;}
+let games=[];
+load.onclick=async()=>{try{const raw=await fetchJSON('games.json');games=Array.isArray(raw)?raw:(raw.games||[]);log(`<b>Loaded games:</b> ${games.length}`);merge.disabled=false;}catch(e){log('<span style="color:#ef4444">Failed:</span> '+e.message);}};
+merge.onclick=async()=>{
+  const file=document.getElementById('box').files[0]; if(!file){alert('Choose a boxscore.json first.');return;}
+  const g=(await (await file.text()).then(JSON.parse)); const game=g.game||g;
+  games=games.filter(x=>String(x.game_id||x.id)!==String(game.game_id||game.id)); games.push(game);
+  const teams=new Map(); const ensure=(id,name)=>{if(!teams.has(id))teams.set(id,{id,name,wins:0,losses:0,gp:0,pf:0,pa:0});return teams.get(id);};
+  games.forEach(gg=>{const H=gg.home,A=gg.away,TH=ensure(H.id,H.name),TA=ensure(A.id,A.name);TH.gp++;TA.gp++;TH.pf+=H.score;TH.pa+=A.score;TA.pf+=A.score;TA.pa+=H.score; if(H.score>A.score){TH.wins++;TA.losses++;}else{TA.wins++;TH.losses++;}});
+  const st=[...teams.values()].map(t=>({...t,diff:t.pf-t.pa})).sort((a,b)=>b.wins-a.wins||a.losses-b.losses||(b.diff-a.diff));
+  const totals=new Map(); const bump=(id,name)=>{if(!totals.has(id))totals.set(id,{id,name,gp:0,reb:0,ast:0,stl:0,blk:0,pts:0});return totals.get(id);};
+  games.forEach(gg=>{const H=gg.home,A=gg.away,ht=bump(H.id,H.name),at=bump(A.id,A.name);ht.gp++;at.gp++;ht.pts+=H.score;at.pts+=A.score;const add=(t,tm)=>{const k=tm.totals||{};t.reb+=k.reb||0;t.ast+=k.ast||0;t.stl+=k.stl||0;t.blk+=k.blk||0;};add(ht,H);add(at,A);});
+  const team_stats=[...totals.values()].map(t=>({id:t.id,name:t.name,ppg:t.pts/Math.max(1,t.gp),rpg:t.reb/Math.max(1,t.gp),apg:t.ast/Math.max(1,t.gp),spg:t.stl/Math.max(1,t.gp),bpg:t.blk/Math.max(1,t.gp)}));
+  const ppl=new Map(); const addP=(team,p)=>{const id=p.gamertag||p.name;if(!ppl.has(id))ppl.set(id,{gamertag:id,team_id:team.id,team:team.name,gp:0,pts:0,reb:0,ast:0,stl:0,blk:0,tpm:0});const r=ppl.get(id);r.gp++;r.pts+=p.pts||0;r.reb+=p.reb||0;r.ast+=p.ast||0;r.stl+=p.stl||0;r.blk+=p.blk||0;r.tpm+=p.tpm||0;};
+  games.forEach(gg=>{gg.home.players?.forEach(p=>addP(gg.home,p));gg.away.players?.forEach(p=>addP(gg.away,p));});
+  const players=[...ppl.values()].map(p=>({...p,ppg:p.pts/Math.max(1,p.gp),rpg:p.reb/Math.max(1,p.gp),apg:p.ast/Math.max(1,p.gp),spg:p.stl/Math.max(1,p.gp),bpg:p.blk/Math.max(1,p.gp)}));
+  const downloads=document.getElementById('downloads'); downloads.innerHTML='';
+  downloads.appendChild(dl('games.json',{games}));
+  downloads.appendChild(dl('standings.json',{season:'2025',updated:new Date().toISOString().slice(0,10),standings:st}));
+  downloads.appendChild(dl('team_stats.json',team_stats));
+  downloads.appendChild(dl('players.json',players));
+  log('<b>Done.</b> Download and upload to /Euro2KL/assets/data');
+};
+</script>
+</div></body></html>
